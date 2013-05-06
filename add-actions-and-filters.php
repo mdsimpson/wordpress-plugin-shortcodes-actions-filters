@@ -4,7 +4,7 @@
    Plugin URI: http://wordpress.org/extend/plugins/add-actions-and-filters/
    Version: 0.1
    Author: Michael Simpson
-   Description: Add PHP Code to create your own Actions and Fillters
+   Description: Add PHP Code to create your own Actions and Filters
    Text Domain: add-actions-and-filters
    License: GPL3
   */
