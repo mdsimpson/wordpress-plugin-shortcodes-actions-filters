@@ -131,15 +131,16 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
     function addToolsAdminPage()
     {
-        $this->requireExtraPluginFiles();
-        $displayName = $this->getPluginDisplayName();
-        add_submenu_page('tools.php',
-            $displayName,
-            $displayName,
-            'manage_options',
-            $this->getCodePageSlug(), // slug
-            array(&$this, 'adminPage'));
-
+        if (current_user_can('manage_options')) {
+            $this->requireExtraPluginFiles();
+            $displayName = $this->getPluginDisplayName();
+            add_submenu_page('tools.php',
+                $displayName,
+                $displayName,
+                'manage_options',
+                $this->getCodePageSlug(), // slug
+                array(&$this, 'adminPage'));
+        }
     }
 
     function adminPage()
@@ -196,20 +197,24 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
     public function ajaxSave()
     {
-        if (!headers_sent()) {
-            // Don't let IE cache this request
-            header("Pragma: no-cache");
-            header("Cache-Control: no-cache, must-revalidate");
-            header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
+        if (current_user_can('manage_options')) {
+            if (!headers_sent()) {
+                // Don't let IE cache this request
+                header("Pragma: no-cache");
+                header("Cache-Control: no-cache, must-revalidate");
+                header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
 
-            header("Content-type: text/plain");
+                header("Content-type: text/plain");
+            }
+
+
+            $this->updateOption('code', stripslashes($_REQUEST['code']));
+
+            _e('Saved', 'add-actions-and-filters');
+            die();
+        } else {
+            die(-1);
         }
-
-
-        $this->updateOption('code', stripslashes($_REQUEST['code']));
-
-        _e('Saved', 'add-actions-and-filters');
-        die();
     }
 
 }

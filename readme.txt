@@ -17,6 +17,7 @@ Add PHP Code to create your own Actions and Filters.
 Provides a place to add your code that is more convenient than putting it in your theme's functions.php file.
 
 Add your code in the administration area -> <strong>Tools</strong> -> <strong>Add Actions and Filters</strong>
+but this is only available to users with Administrator role.
 
 What this plugin?
 Existing WordPress documentation suggests adding your own functions and filters in the theme's functions.php file. This is not a good idea because
@@ -42,6 +43,10 @@ Credit: includes <a href="http://www.cdolivet.com/editarea/">Edit area</a>
 
 == Changelog ==
 
-= 0.1 =
+= 1.1 =
+
+* Limiting access to only Administrators to avoid possible security exploit
+
+= 1.0 =
 
 * Initial Revision
