@@ -2,7 +2,7 @@
 /*
    Plugin Name: Add Actions And Filters
    Plugin URI: http://wordpress.org/extend/plugins/add-actions-and-filters/
-   Version: 1.1
+   Version: 1.2
    Author: Michael Simpson
    Description: Add PHP Code to create your own Actions and Filters
    Text Domain: add-actions-and-filters

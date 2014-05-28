@@ -5,7 +5,7 @@ Tags: add actions and filters,add action,add filter,actions,filters
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Requires at least: 3.2.1
-Tested up to: 3.5.1
+Tested up to: 3.9.1
 Stable tag: 1.1
 
 Add PHP Code to create your own Actions and Filters
@@ -42,6 +42,10 @@ Credit: includes <a href="http://www.cdolivet.com/editarea/">Edit area</a>
 1. Admin page where code is entered
 
 == Changelog ==
+
+= 1.2 =
+
+* Fixed debug error message on admin page
 
 = 1.1 =
 

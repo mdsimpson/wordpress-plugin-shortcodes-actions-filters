@@ -96,22 +96,13 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         // Example adding a script & style just for the options administration page
         // http://plugin.michael-simpson.com/?page_id=47
         if (strpos($_SERVER['REQUEST_URI'], $this->getCodePageSlug()) !== false) {
-            wp_enqueue_script('edit_area', plugins_url('/edit_area/edit_area_full.js', __FILE__));
-            //wp_enqueue_style('my-style', plugins_url('/css/my-style.css', __FILE__));
+            add_action('admin_enqueue_scripts', array(&$this, 'enqueueAdminPageStylesAndScripts'));
         }
-
 
         // Add Actions & Filters
         // http://plugin.michael-simpson.com/?page_id=37
         $code = $this->getOption('code');
         eval($code);
-
-        // Adding scripts & styles to all pages
-        // Examples:
-        //        wp_enqueue_script('jquery');
-        //        wp_enqueue_style('my-style', plugins_url('/css/my-style.css', __FILE__));
-        //        wp_enqueue_script('my-script', plugins_url('/js/my-script.js', __FILE__));
-
 
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39
@@ -122,6 +113,11 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         add_action('wp_ajax_addactionsandfilters_save', array(&$this, 'ajaxSave'));
 
 
+    }
+
+    function enqueueAdminPageStylesAndScripts() {
+        wp_enqueue_script('edit_area', plugins_url('/edit_area/edit_area_full.js', __FILE__));
+        //wp_enqueue_style('my-style', plugins_url('/css/my-style.css', __FILE__));
     }
 
     function getCodePageSlug()
