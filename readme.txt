@@ -36,12 +36,23 @@ Credit: includes <a href="http://www.cdolivet.com/editarea/">Edit area</a>
 
 == Frequently Asked Questions ==
 
+= I get a fatal PHP Error and my site doesn't work. How do I recover? =
+If the code you save causes a fatal PHP error, it can cause your site to stop working.
+In such a case, connect to you database via PHPMyAdmin.
+
+1. Run the query: <code>SELECT * FROM wp_options WHERE option_name = 'AddActionsAndFilters_Plugin_code'</code>
+1. Copy the code so that you have it
+1. Delete it from the database: <code>DELETE FROM wp_options WHERE option_name = 'AddActionsAndFilters_Plugin_code'</code>
 
 == Screenshots ==
 
 1. Admin page where code is entered
 
 == Changelog ==
+
+= 1.3 =
+
+* More graceful handling of PHP FATAL Errors introduced by user's code
 
 = 1.2 =
 

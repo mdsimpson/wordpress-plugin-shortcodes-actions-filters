@@ -101,8 +101,18 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
         // Add Actions & Filters
         // http://plugin.michael-simpson.com/?page_id=37
+        $tmpCode = $this->getOption('tmp_code', '');
         $code = $this->getOption('code');
-        eval($code);
+        if (!empty($tmpCode) && $tmpCode != $code) {
+            // Test that the code works
+            $this->updateOption('tmp_code', '');
+            $this->updateOption('fatal_code', $tmpCode);
+            eval($tmpCode); // Make raise FATAL error
+            $this->updateOption('code', $tmpCode);
+            $this->updateOption('fatal_code', '');
+        } else {
+            eval($code);
+        }
 
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39
@@ -152,10 +162,23 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
         <form action='' method='post'>
             <input type="submit" id="savecode" value="Save"/>
-            <p id="codesavestatus"></p>
+            <p id="codesavestatus">
+                <?php
+                $fatalCode = $this->getOption('fatal_code', '');
+                $code = $this->getOption('code');
+                $displayCode = $code;
+                if (!empty($fatalCode) && $fatalCode != $code) {
+                    $displayCode = $fatalCode;
+                    $this->updateOption('fatal_code', '');
+                    ?><span style="font-weight: bold; background-color: yellow"><?php
+                    _e('NOT SAVED: Code was not saved because it causes a PHP FATAL ERROR.', 'add-actions-and-filters');
+                    ?></span><?php
+                }
+                ?>
+            </p>
             <label for="code"><?php _e('Put PHP code here to define functions and add them as <a target="_addactions" href="http://codex.wordpress.org/Function_Reference/add_action">actions</a> or <a target="_addfilter" href="http://codex.wordpress.org/Function_Reference/add_filter">filters</a>. Also add <a target="_scripts" href="http://codex.wordpress.org/Function_Reference/wp_enqueue_script">scripts</a> and <a target="_styles" href="http://codex.wordpress.org/Function_Reference/wp_enqueue_style">styles</a>.', 'add-actions-and-filters'); ?></label>
             <textarea id="code" style="height: 650px; width: 100%;"
-                      name="test_1"><?php echo $this->getOption('code'); ?></textarea>
+                      name="test_1"><?php echo $displayCode; ?></textarea>
         </form>
 
         <script language="Javascript" type="text/javascript">
@@ -203,10 +226,10 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
                 header("Content-type: text/plain");
             }
 
+            $code = stripslashes($_REQUEST['code']);
 
-            $this->updateOption('code', stripslashes($_REQUEST['code']));
-
-            _e('Saved', 'add-actions-and-filters');
+            // Save it as temporarily, potentially fatal code
+            $this->updateOption('tmp_code', $code);
             die();
         } else {
             die(-1);
