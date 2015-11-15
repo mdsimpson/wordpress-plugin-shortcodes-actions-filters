@@ -1,7 +1,7 @@
 <?php
 
 /*
-    "Add Actions and Filters" Copyright (C) 2013-2015 Michael Simpson  (email : michael.d.simpson@gmail.com)
+    "Add Shortcodes, Actions and Filters" Copyright (C) 2013-2015 Michael Simpson  (email : michael.d.simpson@gmail.com)
 
     This file is part of Add Actions and Filters for WordPress.
 
