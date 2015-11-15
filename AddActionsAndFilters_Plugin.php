@@ -354,7 +354,10 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         echo '</style>';
 
         // Form for bulk actions
-        printf('<form action="admin.php?page=%s" method="post">', $this->getAdminPageSlug());
+        printf('<form action="admin.php?page=%s%s" method="post">',
+            $this->getAdminPageSlug(),
+            (isset($_REQUEST['paged']) && $_REQUEST['paged']) ? ('&paged=' . $_REQUEST['paged']) : ''
+        );
 
         // Code table
         $table->display();

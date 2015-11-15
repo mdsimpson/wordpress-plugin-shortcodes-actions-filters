@@ -118,25 +118,53 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         return $text;
     }
 
+    /**
+     * @param $item array
+     * @return array
+     */
+    public function createRowActions($item) {
+        $url = sprintf('?page=%s&id=%s', $_REQUEST['page'], $item['id']);
+        if (isset($_REQUEST['paged']) && $_REQUEST['paged']) {
+            $url .= '&paged=' . $_REQUEST['paged'];
+        }
+        $url .= '&action=%s';
+        $tag = '<a href="' . $url . '">%s</a>';
 
+        $rowActions = array();
+        if ($item['enabled']) {
+            $action = $this->actions->getDeactivateStrings();
+            $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+        } else {
+            $action = $this->actions->getActivateStrings();
+            $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+        }
+        $action = $this->actions->getEditStrings();
+        $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+
+        $action = $this->actions->getDeleteStrings();
+        $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+
+        return $rowActions;
+    }
+
+    /**
+     * @param $item array
+     * @return string
+     */
     public function column_name($item)
     {
-        $actions = array();
-        if ($item['enabled']) {
-            $actions['Deactivate'] = sprintf('<a href="?page=%s&action=%s&id=%s">Deactivate</a>', $_REQUEST['page'], 'deactivate', $item['id']);
-        } else {
-            $actions['Activate'] = sprintf('<a href="?page=%s&action=%s&id=%s">Activate</a>', $_REQUEST['page'], 'activate', $item['id']);
-        }
-        $actions['edit'] = sprintf('<a href="?page=%s&action=%s&id=%s">Edit</a>', $_REQUEST['page'], 'edit', $item['id']);
-        $actions['delete'] = sprintf('<a href="?page=%s&action=%s&id=%s">Delete</a>', $_REQUEST['page'], 'delete', $item['id']);
-
         $text = $item['name'];
         if (!$item['enabled']) {
             $text = $this->grayOutText($text);
         }
-        return sprintf('%1$s %2$s', $text, $this->row_actions($actions));
+        $rowActions = $this->createRowActions($item);
+        return sprintf('%1$s %2$s', $text, $this->row_actions($rowActions));
     }
 
+    /**
+     * @param $item array
+     * @return string
+     */
     public function column_enabled($item)
     {
         $text = ($item['enabled']) ? '&#x2713;' : '&#x2715;';
@@ -146,6 +174,10 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         return $text;
     }
 
+    /**
+     * @param $item array
+     * @return string
+     */
     public function column_shortcode($item)
     {
         $text = ($item['shortcode']) ? '[...]' : '';
@@ -155,6 +187,10 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         return $text;
     }
 
+    /**
+     * @param $item array
+     * @return string
+     */
     public function column_cb($item)
     {
         return sprintf(
@@ -162,6 +198,11 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         );
     }
 
+    /**
+     * Make text grayed-out in HTML to indicate it is disabled
+     * @param $text string
+     * @return string
+     */
     public function grayOutText($text)
     {
         return '<span class="item-inactive">' . $text . '</span>';

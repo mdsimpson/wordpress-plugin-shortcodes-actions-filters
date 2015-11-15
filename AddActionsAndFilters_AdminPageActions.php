@@ -20,6 +20,8 @@
     If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once('AddActionsAndFilters_AdminPageActionItem.php');
+
 class AddActionsAndFilters_AdminPageActions
 {
 
@@ -40,6 +42,13 @@ class AddActionsAndFilters_AdminPageActions
     }
 
     /**
+     * @return AddActionsAndFilters_AdminPageActionItem
+     */
+    public function getActivateStrings() {
+        return new AddActionsAndFilters_AdminPageActionItem($this->getActivateKey(), $this->getActivateDisplayString());
+    }
+
+    /**
      * @return string
      */
     public function getDeactivateKey()
@@ -53,6 +62,13 @@ class AddActionsAndFilters_AdminPageActions
     public function getDeactivateDisplayString()
     {
         return __('Deactivate', 'add-actions-and-filters');
+    }
+
+    /**
+     * @return AddActionsAndFilters_AdminPageActionItem
+     */
+    public function getDeactivateStrings() {
+        return new AddActionsAndFilters_AdminPageActionItem($this->getDeactivateKey(), $this->getDeactivateDisplayString());
     }
 
     /**
@@ -72,6 +88,13 @@ class AddActionsAndFilters_AdminPageActions
     }
 
     /**
+     * @return AddActionsAndFilters_AdminPageActionItem
+     */
+    public function getEditStrings() {
+        return new AddActionsAndFilters_AdminPageActionItem($this->getEditKey(), $this->getEditDisplayString());
+    }
+
+    /**
      * @return string
      */
     public function getDeleteKey()
@@ -85,6 +108,13 @@ class AddActionsAndFilters_AdminPageActions
     public function getDeleteDisplayString()
     {
         return __('Delete', 'add-actions-and-filters');
+    }
+
+    /**
+     * @return AddActionsAndFilters_AdminPageActionItem
+     */
+    public function getDeleteStrings() {
+        return new AddActionsAndFilters_AdminPageActionItem($this->getDeleteKey(), $this->getDeleteDisplayString());
     }
 
     /**
@@ -102,6 +132,14 @@ class AddActionsAndFilters_AdminPageActions
     {
         return __('Export', 'add-actions-and-filters');
     }
+
+    /**
+     * @return AddActionsAndFilters_AdminPageActionItem
+     */
+    public function getExportStrings() {
+        return new AddActionsAndFilters_AdminPageActionItem($this->getExportKey(), $this->getExportDisplayString());
+    }
+
 
     /**
      * @return array
