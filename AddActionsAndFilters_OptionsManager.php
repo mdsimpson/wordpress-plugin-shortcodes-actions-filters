@@ -262,115 +262,8 @@ class AddActionsAndFilters_OptionsManager {
      * @return void
      */
     public function settingsPage() {
-        if (!current_user_can('manage_options')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'add-actions-and-filters'));
-        }
-
-        $optionMetaData = $this->getOptionMetaData();
-
-        // Save Posted Options
-        if ($optionMetaData != null) {
-            foreach ($optionMetaData as $aOptionKey => $aOptionMeta) {
-                if (isset($_POST[$aOptionKey])) {
-                    $this->updateOption($aOptionKey, $_POST[$aOptionKey]);
-                }
-            }
-        }
-
-        // HTML for the page
-        $settingsGroup = get_class($this) . '-settings-group';
-        ?>
-        <div class="wrap">
-            <h2><?php _e('System Settings', 'add-actions-and-filters'); ?></h2>
-            <table class="form-table"><tbody>
-            <tr><td><?php _e('System', 'add-actions-and-filters'); ?></td><td><?php echo php_uname(); ?></td></tr>
-            <tr><td><?php _e('PHP Version', 'add-actions-and-filters'); ?></td>
-                <td><?php echo phpversion(); ?>
-                <?php
-                if (version_compare('5.2', phpversion()) > 0) {
-                    echo '&nbsp;&nbsp;&nbsp;<span style="background-color: #ffcc00;">';
-                    _e('(WARNING: This plugin may not work properly with versions earlier than PHP 5.2)', 'add-actions-and-filters');
-                    echo '</span>';
-                }
-                ?>
-                </td>
-            </tr>
-            <tr><td><?php _e('MySQL Version', 'add-actions-and-filters'); ?></td>
-                <td><?php echo $this->getMySqlVersion() ?>
-                    <?php
-                    echo '&nbsp;&nbsp;&nbsp;<span style="background-color: #ffcc00;">';
-                    if (version_compare('5.0', $this->getMySqlVersion()) > 0) {
-                        _e('(WARNING: This plugin may not work properly with versions earlier than MySQL 5.0)', 'add-actions-and-filters');
-                    }
-                    echo '</span>';
-                    ?>
-                </td>
-            </tr>
-            </tbody></table>
-
-            <h2><?php echo $this->getPluginDisplayName(); echo ' '; _e('Settings', 'add-actions-and-filters'); ?></h2>
-
-            <form method="post" action="">
-            <?php settings_fields($settingsGroup); ?>
-                <table class="form-table"><tbody>
-                <?php
-                if ($optionMetaData != null) {
-                    foreach ($optionMetaData as $aOptionKey => $aOptionMeta) {
-                        $displayText = is_array($aOptionMeta) ? $aOptionMeta[0] : $aOptionMeta;
-                        ?>
-                            <tr valign="top">
-                                <th scope="row"><p><label for="<?php echo $aOptionKey ?>"><?php echo $displayText ?></label></p></th>
-                                <td>
-                                <?php $this->createFormControl($aOptionKey, $aOptionMeta, $this->getOption($aOptionKey)); ?>
-                                </td>
-                            </tr>
-                        <?php
-                    }
-                }
-                ?>
-                </tbody></table>
-                <p class="submit">
-                    <input type="submit" class="button-primary"
-                           value="<?php _e('Save Changes', 'add-actions-and-filters') ?>"/>
-                </p>
-            </form>
-        </div>
-        <?php
-
     }
 
-    /**
-     * Helper-function outputs the correct form element (input tag, select tag) for the given item
-     * @param  $aOptionKey string name of the option (un-prefixed)
-     * @param  $aOptionMeta mixed meta-data for $aOptionKey (either a string display-name or an array(display-name, option1, option2, ...)
-     * @param  $savedOptionValue string current value for $aOptionKey
-     * @return void
-     */
-    protected function createFormControl($aOptionKey, $aOptionMeta, $savedOptionValue) {
-        if (is_array($aOptionMeta) && count($aOptionMeta) >= 2) { // Drop-down list
-            $choices = array_slice($aOptionMeta, 1);
-            ?>
-            <p><select name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>">
-            <?php
-                            foreach ($choices as $aChoice) {
-                $selected = ($aChoice == $savedOptionValue) ? 'selected' : '';
-                ?>
-                    <option value="<?php echo $aChoice ?>" <?php echo $selected ?>><?php echo $this->getOptionValueI18nString($aChoice) ?></option>
-                <?php
-            }
-            ?>
-            </select></p>
-            <?php
-
-        }
-        else { // Simple input field
-            ?>
-            <p><input type="text" name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>"
-                      value="<?php echo esc_attr($savedOptionValue) ?>" size="50"/></p>
-            <?php
-
-        }
-    }
 
     /**
      * Override this method and follow its format.
@@ -386,7 +279,7 @@ class AddActionsAndFilters_OptionsManager {
      * @param  $optionValue string
      * @return string __($optionValue) if it is listed in this method, otherwise just returns $optionValue
      */
-    protected function getOptionValueI18nString($optionValue) {
+    public function getOptionValueI18nString($optionValue) {
         switch ($optionValue) {
             case 'true':
                 return __('true', 'add-actions-and-filters');
@@ -407,19 +300,6 @@ class AddActionsAndFilters_OptionsManager {
                 return __('Anyone', 'add-actions-and-filters');
         }
         return $optionValue;
-    }
-
-    /**
-     * Query MySQL DB for its version
-     * @return string|false
-     */
-    protected function getMySqlVersion() {
-        global $wpdb;
-        $rows = $wpdb->get_results('select version() as mysqlversion');
-        if (!empty($rows)) {
-             return $rows[0]->mysqlversion;
-        }
-        return false;
     }
 
     /**

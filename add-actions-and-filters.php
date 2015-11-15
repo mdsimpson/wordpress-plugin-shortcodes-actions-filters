@@ -1,10 +1,10 @@
 <?php
 /*
-   Plugin Name: Add Actions And Filters
+   Plugin Name: Add Shortcodes, Actions And Filters
    Plugin URI: http://wordpress.org/extend/plugins/add-actions-and-filters/
-   Version: 1.3
+   Version: 2.0
    Author: Michael Simpson
-   Description: Add PHP Code to create your own Actions and Filters
+   Description: Add PHP Code to create and manage your own Shortcodes, Actions and Filters. <strong><a href="admin.php?page=ShortcodesActionsFilters">Add Code</a></strong> | <a href="admin.php?page=ShortcodesActionsFiltersSettings">Settings</a> | <a href="admin.php?page=ShortcodesActionsFiltersImpExp">Import/Export</a>
    Text Domain: add-actions-and-filters
    License: GPL3
   */

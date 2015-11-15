@@ -114,16 +114,16 @@ class AddActionsAndFilters_LifeCycle extends AddActionsAndFilters_InstallIndicat
     protected function otherUninstall() {
     }
 
-    /**
-     * Puts the configuration page in the Plugins menu by default.
-     * Override to put it elsewhere or create a set of submenus
-     * Override with an empty implementation if you don't want a configuration page
-     * @return void
-     */
-    public function addSettingsSubMenuPage() {
-        $this->addSettingsSubMenuPageToPluginsMenu();
-        //$this->addSettingsSubMenuPageToSettingsMenu();
-    }
+//    /**
+//     * Puts the configuration page in the Plugins menu by default.
+//     * Override to put it elsewhere or create a set of submenus
+//     * Override with an empty implementation if you don't want a configuration page
+//     * @return void
+//     */
+//    public function addSettingsSubMenuPage() {
+//        $this->addSettingsSubMenuPageToPluginsMenu();
+//        //$this->addSettingsSubMenuPageToSettingsMenu();
+//    }
 
 
     protected function requireExtraPluginFiles() {
@@ -139,27 +139,27 @@ class AddActionsAndFilters_LifeCycle extends AddActionsAndFilters_InstallIndicat
         return get_class($this) . 'Settings';
     }
 
-    protected function addSettingsSubMenuPageToPluginsMenu() {
-        $this->requireExtraPluginFiles();
-        $displayName = $this->getPluginDisplayName();
-        add_submenu_page('plugins.php',
-                         $displayName,
-                         $displayName,
-                         'manage_options',
-                         $this->getSettingsSlug(),
-                         array(&$this, 'settingsPage'));
-    }
+//    protected function addSettingsSubMenuPageToPluginsMenu() {
+//        $this->requireExtraPluginFiles();
+//        $displayName = $this->getPluginDisplayName();
+//        add_submenu_page('plugins.php',
+//                         $displayName,
+//                         $displayName,
+//                         'manage_options',
+//                         $this->getSettingsSlug(),
+//                         array(&$this, 'settingsPage'));
+//    }
 
 
-    protected function addSettingsSubMenuPageToSettingsMenu() {
-        $this->requireExtraPluginFiles();
-        $displayName = $this->getPluginDisplayName();
-        add_options_page($displayName,
-                         $displayName,
-                         'manage_options',
-                         $this->getSettingsSlug(),
-                         array(&$this, 'settingsPage'));
-    }
+//    protected function addSettingsSubMenuPageToSettingsMenu() {
+//        $this->requireExtraPluginFiles();
+//        $displayName = $this->getPluginDisplayName();
+//        add_options_page($displayName,
+//                         $displayName,
+//                         'manage_options',
+//                         $this->getSettingsSlug(),
+//                         array(&$this, 'settingsPage'));
+//    }
 
     /**
      * @param  $name string name of a database table
@@ -192,6 +192,18 @@ class AddActionsAndFilters_LifeCycle extends AddActionsAndFilters_InstallIndicat
      */
     public function getAjaxUrl($actionName) {
         return admin_url('admin-ajax.php') . '?action=' . $actionName;
+    }
+
+    /**
+     * @param string $pathRelativeToThisPluginRoot points to a file with relative path from
+     * this plugin's root dir. I.e. file "xxxx.js" in the root of this plugin has
+     * url = $this->getPluginFileUrl('xxxx.js');
+     * If it was in a sub-folder "js" then you would use
+     *    $this->getPluginFileUrl('js/xxxx.js');
+     * @return string full url to input file
+     */
+    public function getPluginFileUrl($pathRelativeToThisPluginRoot = '') {
+        return plugins_url($pathRelativeToThisPluginRoot, __FILE__);
     }
 
 }

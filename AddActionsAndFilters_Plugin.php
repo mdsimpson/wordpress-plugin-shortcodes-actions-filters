@@ -1,7 +1,7 @@
 <?php
 
 /*
-    "Add Actions and Filters" Copyright (C) 2013 Michael Simpson  (email : michael.d.simpson@gmail.com)
+    "Add Actions and Filters" Copyright (C) 2013-2015 Michael Simpson  (email : michael.d.simpson@gmail.com)
 
     This file is part of Add Actions and Filters for WordPress.
 
@@ -32,18 +32,26 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     public function getOptionMetaData()
     {
         //  http://plugin.michael-simpson.com/?page_id=31
-        return array(//'_version' => array('Installed Version'), // Leave this one commented-out. Uncomment to test upgrades.
+        return array(
+            '_version' => array('Installed Version'), // For testing upgrades
+            'NumberItemsPerPage' => array('Number of items shown in the Administration Page at a time'), // For testing upgrades
+            'DropOnUninstall' => array(__('Delete all added code and settings for this plugin\'s when uninstalling', 'add-actions-and-filters'), 'false', 'true')
         );
     }
 
     public function getPluginDisplayName()
     {
-        return 'Add Actions And Filters';
+        return __('Shortcodes, Actions and Filters', 'add-actions-and-filters');
     }
 
     protected function getMainPluginFileName()
     {
         return 'add-actions-and-filters.php';
+    }
+
+    function getTableName()
+    {
+        return $this->prefixTableName('usercode');
     }
 
     /**
@@ -56,10 +64,29 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     protected function installDatabaseTables()
     {
-        //        global $wpdb;
-        //        $tableName = $this->prefixTableName('mytable');
-        //        $wpdb->query("CREATE TABLE IF NOT EXISTS `$tableName` (
-        //            `id` INTEGER NOT NULL");
+        global $wpdb;
+
+        $charset_collate = $wpdb->get_charset_collate();
+        $table_name = $this->getTableName();
+
+        $sql =
+            "CREATE TABLE $table_name (\n" .
+            "id mediumint(9) NOT NULL AUTO_INCREMENT, \n" .
+            "enabled boolean DEFAULT 0 NOT NULL, \n" .
+            "shortcode boolean DEFAULT 0 NOT NULL, \n" .
+            "name tinytext DEFAULT '' NOT NULL, \n" .
+            "description tinytext DEFAULT '' NOT NULL, \n" .
+            "echo boolean DEFAULT 0 NOT NULL, \n" .
+            "code text DEFAULT '' NOT NULL, \n" .
+            "UNIQUE KEY id (id) \n" .
+            ") $charset_collate;";
+
+//        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+//        dbDelta($sql);
+
+        $wpdb->show_errors();
+        $wpdb->query($sql);
+        $wpdb->hide_errors();
     }
 
     /**
@@ -69,9 +96,11 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     protected function unInstallDatabaseTables()
     {
-        //        global $wpdb;
-        //        $tableName = $this->prefixTableName('mytable');
-        //        $wpdb->query("DROP TABLE IF EXISTS `$tableName`");
+        if ('true' == $this->getOption('DropOnUninstall', 'false')) {
+            global $wpdb;
+            $table_name = $this->getTableName();
+            $wpdb->query("DROP TABLE IF EXISTS $table_name");
+        }
     }
 
 
@@ -82,6 +111,17 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     public function upgrade()
     {
+        $upgradeOk = true;
+        $savedVersion = $this->getVersionSaved();
+        if ($this->isVersionLessThan($savedVersion, '2.0')) {
+            $this->installDatabaseTables();
+        }
+
+        // Post-upgrade, set the current version in the options
+        $codeVersion = $this->getVersion();
+        if ($upgradeOk && $savedVersion != $codeVersion) {
+            $this->saveInstalledVersion();
+        }
     }
 
 
@@ -90,17 +130,19 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
         // Add options administration page
         // http://plugin.michael-simpson.com/?page_id=47
-        //add_action('admin_menu', array(&$this, 'addSettingsSubMenuPage'));
         add_action('admin_menu', array(&$this, 'addToolsAdminPage'));
+        add_action('admin_menu', array(&$this, 'addSettingsPage'));
 
         // Example adding a script & style just for the options administration page
         // http://plugin.michael-simpson.com/?page_id=47
-        if (strpos($_SERVER['REQUEST_URI'], $this->getCodePageSlug()) !== false) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false) {
             add_action('admin_enqueue_scripts', array(&$this, 'enqueueAdminPageStylesAndScripts'));
         }
 
         // Add Actions & Filters
         // http://plugin.michael-simpson.com/?page_id=37
+
+        // todo: revisit
         $tmpCode = $this->getOption('tmp_code', '');
         $code = $this->getOption('code');
         if (!empty($tmpCode) && $tmpCode != $code) {
@@ -125,16 +167,41 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
     }
 
-    function enqueueAdminPageStylesAndScripts() {
+    // todo new JS editor
+    function enqueueAdminPageStylesAndScripts()
+    {
         wp_enqueue_script('edit_area', plugins_url('/edit_area/edit_area_full.js', __FILE__));
         //wp_enqueue_style('my-style', plugins_url('/css/my-style.css', __FILE__));
     }
 
-    function getCodePageSlug()
+    /**
+     * @return string slug for plugin's main administration page
+     */
+    function getAdminPageSlug()
     {
-        return 'AddActionsAndFiltersCode';
+        return 'ShortcodesActionsFilters';
     }
 
+    /**
+     * @return string slug for plugin's Settings page
+     */
+    protected function getSettingsSlug()
+    {
+        return $this->getAdminPageSlug() . 'Settings';
+    }
+
+    /**
+     * @return string slug for plugin's Settings page
+     */
+    protected function getImportExportSlug()
+    {
+        return $this->getAdminPageSlug() . 'ImpExp';
+    }
+
+
+    /**
+     * Add the plugin's admin page under the Tools menu in the WP Dashboard
+     */
     function addToolsAdminPage()
     {
         if (current_user_can('manage_options')) {
@@ -144,76 +211,191 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
                 $displayName,
                 $displayName,
                 'manage_options',
-                $this->getCodePageSlug(), // slug
-                array(&$this, 'adminPage'));
+                $this->getAdminPageSlug(), // slug
+                array(&$this, 'handleAdminPageUrl'));
         }
     }
 
-    function adminPage()
+    /**
+     * Create a settings page for the plugin, but not in the Dashboard menus
+     */
+    function addSettingsPage()
     {
-        ?>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-            <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="hosted_button_id" value="SSABNHHPSVWT6">
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0"
-                   name="submit" alt="PayPal - The safer, easier way to pay online!">
-            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-        </form>
+        // Setting Page
+        if (current_user_can('manage_options')) {
+            $this->requireExtraPluginFiles();
+            $displayName = $this->getPluginDisplayName();
+            add_submenu_page(null, // null parent => not in menus
+                $displayName . ' Settings',
+                $displayName . ' Settings',
+                'manage_options',
+                $this->getSettingsSlug(), // slug
+                array(&$this, 'settingsPage'));
 
-        <form action='' method='post'>
-            <input type="submit" id="savecode" value="Save"/>
-            <p id="codesavestatus">
-                <?php
-                $fatalCode = $this->getOption('fatal_code', '');
-                $code = $this->getOption('code');
-                $displayCode = $code;
-                if (!empty($fatalCode) && $fatalCode != $code) {
-                    $displayCode = $fatalCode;
-                    $this->updateOption('fatal_code', '');
-                    ?><span style="font-weight: bold; background-color: yellow"><?php
-                    _e('NOT SAVED: Code was not saved because it causes a PHP FATAL ERROR.', 'add-actions-and-filters');
-                    ?></span><?php
-                }
-                ?>
-            </p>
-            <label for="code"><?php _e('Put PHP code here to define functions and add them as <a target="_addactions" href="http://codex.wordpress.org/Function_Reference/add_action">actions</a> or <a target="_addfilter" href="http://codex.wordpress.org/Function_Reference/add_filter">filters</a>. Also add <a target="_scripts" href="http://codex.wordpress.org/Function_Reference/wp_enqueue_script">scripts</a> and <a target="_styles" href="http://codex.wordpress.org/Function_Reference/wp_enqueue_style">styles</a>.', 'add-actions-and-filters'); ?></label>
-            <textarea id="code" style="height: 650px; width: 100%;"
-                      name="test_1"><?php echo $displayCode; ?></textarea>
-        </form>
-
-        <script language="Javascript" type="text/javascript">
-            // initialisation
-            editAreaLoader.init({
-                id: "code"	// id of the textarea to transform
-                , start_highlight: true	// if start with highlight
-                , allow_resize: "both", allow_toggle: true, word_wrap: true, language: "en", syntax: "php"
-            });
-
-            jQuery("#savecode").click(
-                    function () {
-                        jQuery.ajax(
-                                {
-                                    "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
-                                    "type": "POST",
-                                    "data": "code=" + encodeURIComponent(editAreaLoader.getValue("code")),
-                                    "success": function (data, textStatus) {
-                                        //jQuery("#codesavestatus").html(data);
-                                        location.reload();
-                                    },
-                                    "error": function (textStatus, errorThrown) {
-                                        jQuery("#codesavestatus").html(errorThrown);
-                                    },
-                                    "beforeSend": function () {
-                                        jQuery("#codesavestatus").html('<img src="<?php echo plugins_url('img/load.gif', __FILE__); ?>">');
-                                    }
-                                }
-                        );
-                        return false;
-                    });
-        </script>
-    <?php
+            // Import/Export Page
+            add_submenu_page(null, // null parent => not in menus
+                $displayName . ' Import/Export',
+                $displayName . ' Import/Export',
+                'manage_options',
+                $this->getImportExportSlug(), // slug
+                array(&$this, 'displayImportExportPage'));
+        }
     }
 
+
+    /**
+     * Handle the URL request for the WP dashboard admin page.
+     * Handle any actions indicated in the URL GET parameters
+     */
+    function handleAdminPageUrl()
+    {
+        $this->securityCheck();
+
+        require_once('AddActionsAndFilters_AdminPageActions.php');
+        require_once('AddActionsAndFilters_DataModelConfig.php');
+        include_once('AddActionsAndFilters_DataModel.php');
+
+        // Set up Data Model
+        $config = new AddActionsAndFilters_DataModelConfig();
+        if (isset($_REQUEST['orderby'])) {
+            $config->setOrderby($_REQUEST['orderby']);
+        }
+        if (isset($_REQUEST['order'])) {
+            $config->setAsc($_REQUEST['order'] != 'desc');
+        }
+        $perPage = $this->getOption('NumberItemsPerPage', '10');
+        $config->setNumberPerPage($perPage);
+
+
+        // Init Table
+        $dataModel = new AddActionsAndFilters_DataModel($config);
+        include_once('AddActionsAndFilters_CodeListTable.php');
+        $table = new AddActionsAndFilters_CodeListTable($dataModel);
+        $table->prepare_items();
+
+        // May be changed if a different page is to be displayed
+        $showAdminPage = true;
+
+        // Look for actions to be performed
+        $action = $table->current_action();
+        if ($action && $action != -1) {
+            $actions = new AddActionsAndFilters_AdminPageActions();
+            $ids = null;
+            if (isset($_REQUEST['cb']) && is_array($_REQUEST['cb'])) {
+                // check nonce which is on the bulk action form only
+                if (wp_verify_nonce($_REQUEST['_wpnonce'])) {
+                    $ids = $_REQUEST['cb'];
+                }
+            } else if (isset($_REQUEST['id'])) {
+                $ids = array($_REQUEST['id']);
+            }
+
+            // Perform Actions
+            if ($ids) {
+                switch ($action) {
+                    case $actions->getActivateKey():
+                        $dataModel->activate($ids);
+                        break;
+                    case $actions->getDeactivateKey():
+                        $dataModel->deactivate($ids);
+                        break;
+                    case $actions->getDeleteKey();
+                        $dataModel->delete($ids);
+                        break;
+                    case $actions->getExportKey();
+                        // todo: probably need a different mechanism
+                        $dataModel->export($ids);
+                        break;
+                    case $actions->getEditKey();
+                        $item = $dataModel->getDataItem($_REQUEST['id']);
+                        $showAdminPage = false; // show edit page instead
+                        $this->displayEditPage($item);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        // Display Admin Page
+        if ($showAdminPage) {
+            $this->displayAdminTable($table);
+        }
+
+    }
+
+    /**
+     * Display the Plugin's administration page in the WordPress Dashboard
+     * @param $table AddActionsAndFilters_CodeListTable
+     */
+    function displayAdminTable(&$table)
+    {
+        echo '<div class="wrap">';
+        // Header
+        printf('<table width="%s"><tbody><tr><td><img src="%s"/></td><td align="right"><a href="%s"><img src="%s"/></a><a href="%s"><img src="%s"/></a></td></tr></tbody></table>',
+            '100%',
+            $this->getPluginFileUrl('img/admin-banner.png'),
+            'admin.php?page=' . $this->getImportExportSlug(),
+            $this->getPluginFileUrl('img/import-export.png'),
+            'admin.php?page=' . $this->getSettingsSlug(),
+            $this->getPluginFileUrl('img/settings.png')
+        );
+        printf('<table><tbody><tr><td></td></tr></tbody></table>');
+
+        // Table Styles
+        echo '<style type="text/css">';
+        echo '.wp-list-table .column-id { width: 7%;}';
+        echo '.wp-list-table .column-enabled { width: 12%; text-align: center;}';
+        echo '.wp-list-table .column-shortcode { width: 14%; text-align: center;}';
+        echo '.wp-list-table .column-name { width: 25%; }';
+        echo '.wp-list-table .column-description { width: 42%; }';
+        echo '.wp-list-table .item-inactive { font-style: italic; opacity: 0.6; filter: alpha(opacity = 60); /* MSIE */ }';
+        echo '</style>';
+
+        // Form for bulk actions
+        printf('<form action="admin.php?page=%s" method="post">', $this->getAdminPageSlug());
+
+        // Code table
+        $table->display();
+
+        // Closing Tags
+        echo '</form>';
+        echo '</div>';
+    }
+
+    public function securityCheck() {
+        if (!current_user_can('manage_options')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'add-actions-and-filters'));
+        }
+    }
+
+    public function settingsPage()
+    {
+        $this->securityCheck();
+        require_once('AddActionsAndFilters_ViewSettingsPage.php');
+        $view = new AddActionsAndFilters_ViewSettingsPage($this);
+        $view->display();
+    }
+
+    public function displayEditPage($item)
+    {
+        $this->securityCheck();
+        require_once('AddActionsAndFilters_ViewEditPage.php');
+        $view = new AddActionsAndFilters_ViewEditPage($this);
+        $view->display($item);
+    }
+
+    public function displayImportExportPage()
+    {
+        $this->securityCheck();
+        require_once('AddActionsAndFilters_ViewImportExport.php');
+        $view = new AddActionsAndFilters_ViewImportExport($this);
+        $view->display();
+    }
+
+
+    // todo: move to an actions class
     public function ajaxSave()
     {
         if (current_user_can('manage_options')) {
@@ -229,7 +411,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
             $code = stripslashes($_REQUEST['code']);
 
             // Save it as temporarily, potentially fatal code
-            $this->updateOption('tmp_code', $code);
+            $this->updateOption('tmp_code', $code); // todo use data model
             die();
         } else {
             die(-1);

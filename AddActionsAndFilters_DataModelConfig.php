@@ -1,0 +1,122 @@
+<?php
+
+/*
+    "WordPress Plugin Template" Copyright (C) 2015 Michael Simpson  (email : michael.d.simpson@gmail.com)
+
+    This file is part of WordPress Plugin Template for WordPress.
+
+    WordPress Plugin Template is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    WordPress Plugin Template is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Contact Form to Database Extension.
+    If not, see <http://www.gnu.org/licenses/>.
+*/
+class AddActionsAndFilters_DataModelConfig
+{
+    /**
+     * @var int
+     */
+    var $page;
+
+    /**
+     * @var string column name to sort on
+     */
+    var $orderby;
+
+    /**
+     * @var bool ascending or descending sort
+     */
+    var $asc;
+
+    /**
+     * @var int for pagination
+     */
+    var $numberPerPage;
+
+
+    /**
+     * AddActionsAndFilters_DataModelConfig constructor.
+     * @param string $page
+     * @param string $orderby
+     * @param bool|true $asc
+     */
+    public function __construct($page = '1', $orderby = 'id', $asc = true)
+    {
+        $this->page = $page;
+        $this->orderby = $orderby;
+        $this->asc = $asc;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param int $page
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderby()
+    {
+        return $this->orderby;
+    }
+
+    /**
+     * @param string $orderby
+     */
+    public function setOrderby($orderby)
+    {
+        $this->orderby = $orderby;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAsc()
+    {
+        return $this->asc;
+    }
+
+    /**
+     * @param boolean $asc
+     */
+    public function setAsc($asc)
+    {
+        $this->asc = $asc;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberPerPage()
+    {
+        return $this->numberPerPage;
+    }
+
+    /**
+     * @param int $numberPerPage
+     */
+    public function setNumberPerPage($numberPerPage)
+    {
+        $this->numberPerPage = $numberPerPage;
+    }
+
+}

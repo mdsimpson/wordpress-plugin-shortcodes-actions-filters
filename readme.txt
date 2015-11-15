@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: add actions and filters,add action,add filter,actions,filters
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Requires at least: 3.2.1
-Tested up to: 4.3
+Requires at least: 4.3
+Tested up to: 4.3.1
 Stable tag: 1.3
 
 Add PHP Code to create your own Actions and Filters
@@ -49,6 +49,10 @@ In such a case, connect to you database via PHPMyAdmin.
 1. Admin page where code is entered
 
 == Changelog ==
+
+= 2.0 =
+* Now can create shortcodes similar to (the no longer supported) PHP Shortcode Exec plugin
+* Re-designed administration panel allow you to separate out your code, and enable/disable them individually
 
 = 1.3 =
 
