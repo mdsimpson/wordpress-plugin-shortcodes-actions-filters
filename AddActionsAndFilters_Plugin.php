@@ -177,7 +177,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     /**
      * @return string slug for plugin's main administration page
      */
-    function getAdminPageSlug()
+    public function getAdminPageSlug()
     {
         return 'ShortcodesActionsFilters';
     }
@@ -185,7 +185,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     /**
      * @return string slug for plugin's Settings page
      */
-    protected function getSettingsSlug()
+    public function getSettingsSlug()
     {
         return $this->getAdminPageSlug() . 'Settings';
     }
@@ -193,7 +193,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     /**
      * @return string slug for plugin's Settings page
      */
-    protected function getImportExportSlug()
+    public function getImportExportSlug()
     {
         return $this->getAdminPageSlug() . 'ImpExp';
     }
@@ -331,43 +331,13 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     function displayAdminTable(&$table)
     {
-        echo '<div class="wrap">';
-        // Header
-        printf('<table width="%s"><tbody><tr><td><img src="%s"/></td><td align="right"><a href="%s"><img src="%s"/></a><a href="%s"><img src="%s"/></a></td></tr></tbody></table>',
-            '100%',
-            $this->getPluginFileUrl('img/admin-banner.png'),
-            'admin.php?page=' . $this->getImportExportSlug(),
-            $this->getPluginFileUrl('img/import-export.png'),
-            'admin.php?page=' . $this->getSettingsSlug(),
-            $this->getPluginFileUrl('img/settings.png')
-        );
-        printf('<table><tbody><tr><td></td></tr></tbody></table>');
-
-        // Table Styles
-        echo '<style type="text/css">';
-        echo '.wp-list-table .column-id { width: 7%;}';
-        echo '.wp-list-table .column-enabled { width: 12%; text-align: center;}';
-        echo '.wp-list-table .column-shortcode { width: 14%; text-align: center;}';
-        echo '.wp-list-table .column-name { width: 25%; }';
-        echo '.wp-list-table .column-description { width: 42%; }';
-        echo '.wp-list-table .item-inactive { font-style: italic; opacity: 0.6; filter: alpha(opacity = 60); /* MSIE */ }';
-        echo '</style>';
-
-        // Form for bulk actions
-        printf('<form action="admin.php?page=%s%s" method="post">',
-            $this->getAdminPageSlug(),
-            (isset($_REQUEST['paged']) && $_REQUEST['paged']) ? ('&paged=' . $_REQUEST['paged']) : ''
-        );
-
-        // Code table
-        $table->display();
-
-        // Closing Tags
-        echo '</form>';
-        echo '</div>';
+        require_once('AddActionsAndFilters_ViewAdminPage.php');
+        $view = new AddActionsAndFilters_ViewAdminPage($this, $table);
+        $view->display();
     }
 
-    public function securityCheck() {
+    public function securityCheck()
+    {
         if (!current_user_can('manage_options')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'add-actions-and-filters'));
         }

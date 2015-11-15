@@ -29,7 +29,7 @@ class AddActionsAndFilters_ViewEditPage
 
     // todo: need item data model for saving & retrieving
 
-    public function __construct($plugin)
+    public function __construct(&$plugin)
     {
         $this->plugin = $plugin;
     }

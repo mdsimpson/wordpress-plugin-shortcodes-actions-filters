@@ -29,7 +29,7 @@ class AddActionsAndFilters_ViewSettingsPage
      */
     var $plugin;
 
-    public function __construct($plugin)
+    public function __construct(&$plugin)
     {
         $this->plugin = $plugin;
     }
