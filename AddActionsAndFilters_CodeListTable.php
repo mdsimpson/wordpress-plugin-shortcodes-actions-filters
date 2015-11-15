@@ -127,6 +127,12 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         if (isset($_REQUEST['paged']) && $_REQUEST['paged'] > 1) {
             $url .= '&paged=' . $_REQUEST['paged'];
         }
+        if (isset($_REQUEST['orderby']) && $_REQUEST['orderby']) {
+            $url .= '&orderby=' . $_REQUEST['orderby'];
+        }
+        if (isset($_REQUEST['order']) && $_REQUEST['order']) {
+            $url .= '&order=' . $_REQUEST['order'];
+        }
         $url .= '&action=%s';
         $tag = '<a href="' . $url . '">%s</a>';
 
