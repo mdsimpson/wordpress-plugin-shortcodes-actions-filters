@@ -123,8 +123,8 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
      * @return array
      */
     public function createRowActions($item) {
-        $url = sprintf('?page=%s&id=%s', $_REQUEST['page'], $item['id']);
-        if (isset($_REQUEST['paged']) && $_REQUEST['paged']) {
+        $url = sprintf(get_admin_url() .'admin.php?page=%s&id=%s', $_REQUEST['page'], $item['id']);
+        if (isset($_REQUEST['paged']) && $_REQUEST['paged'] > 1) {
             $url .= '&paged=' . $_REQUEST['paged'];
         }
         $url .= '&action=%s';

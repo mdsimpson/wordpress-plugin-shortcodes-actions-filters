@@ -43,12 +43,13 @@ class AddActionsAndFilters_ViewAdminPage
     {
         echo '<div class="wrap">';
         // Header
+        $adminUrl = get_admin_url() . 'admin.php?page=';
         printf('<table width="%s"><tbody><tr><td><img src="%s"/></td><td align="right"><a href="%s"><img src="%s"/></a><a href="%s"><img src="%s"/></a></td></tr></tbody></table>',
             '100%',
             $this->plugin->getPluginFileUrl('img/admin-banner.png'),
-            'admin.php?page=' . $this->plugin->getImportExportSlug(),
+            $adminUrl . $this->plugin->getImportExportSlug(),
             $this->plugin->getPluginFileUrl('img/import-export.png'),
-            'admin.php?page=' . $this->plugin->getSettingsSlug(),
+            $adminUrl . $this->plugin->getSettingsSlug(),
             $this->plugin->getPluginFileUrl('img/settings.png')
         );
         printf('<table><tbody><tr><td></td></tr></tbody></table>');
@@ -64,7 +65,8 @@ class AddActionsAndFilters_ViewAdminPage
         echo '</style>';
 
         // Form for bulk actions
-        printf('<form action="admin.php?page=%s%s" method="post">',
+        printf('<form action="%s%s%s" method="post">',
+            $adminUrl,
             $this->plugin->getAdminPageSlug(),
             (isset($_REQUEST['paged']) && $_REQUEST['paged']) ? ('&paged=' . $_REQUEST['paged']) : ''
         );

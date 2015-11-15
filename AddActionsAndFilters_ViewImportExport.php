@@ -43,7 +43,7 @@ class AddActionsAndFilters_ViewImportExport
             <tr>
                 <td align="left"><h2><?php _e('Import / Export', 'add-actions-and-filters'); ?></h2></td>
                 <td align="right">
-                    <a href="<?php echo 'admin.php?page=' . $this->plugin->getAdminPageSlug() ?>">
+                    <a href="<?php echo get_admin_url() .'admin.php?page=' . $this->plugin->getAdminPageSlug() ?>">
                         <img width="128" height="50"
                              src="<?php echo $this->plugin->getPluginFileUrl('img/icon-256x100.png') ?>">
                     </a>
