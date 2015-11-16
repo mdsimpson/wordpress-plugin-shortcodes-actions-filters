@@ -69,14 +69,15 @@ class AddActionsAndFilters_ViewAdminPage
         }
     }
 
-    public static function addHelpTab() {
+    public static function addHelpTab()
+    {
         $screen = get_current_screen();
-        $screen->add_help_tab( array(
+        $screen->add_help_tab(array(
             'id' => 'AddActionsAndFilters_help',
             'title' => __('Help'),
             'content' => 'Content TBD', // todo add help tab content
             //'callback' => $callback
-        ) );
+        ));
     }
 
     public function __construct(&$plugin, &$table)
@@ -117,6 +118,9 @@ class AddActionsAndFilters_ViewAdminPage
 
         // Form for bulk actions
         printf('<form action="%s" method="post">', $cleanUrl);
+
+        // Search box
+        $this->table->search_box('search', 'search_id');
 
         // Code table
         $this->table->display();

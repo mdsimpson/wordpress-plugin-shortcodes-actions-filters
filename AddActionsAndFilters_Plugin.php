@@ -274,7 +274,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         require_once('AddActionsAndFilters_DataModelConfig.php');
         require_once('AddActionsAndFilters_DataModel.php');
 
-        // Set up Data Model
+        // Look for Sorting, ordering and searching
         $config = new AddActionsAndFilters_DataModelConfig();
         if (isset($_REQUEST['orderby'])) {
             $config->setOrderby($_REQUEST['orderby']);
@@ -282,8 +282,11 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         if (isset($_REQUEST['order'])) {
             $config->setAsc($_REQUEST['order'] != 'desc');
         }
+        if (isset($_REQUEST['s'])) {
+            $config->setSearch($_REQUEST['s']);
+        }
 
-        // Init Table
+        // Init DataModel and Table
         $dataModel = new AddActionsAndFilters_DataModel($config);
         require_once('AddActionsAndFilters_CodeListTable.php');
         $table = new AddActionsAndFilters_CodeListTable($dataModel);

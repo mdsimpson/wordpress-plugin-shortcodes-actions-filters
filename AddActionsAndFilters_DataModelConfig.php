@@ -46,6 +46,10 @@ class AddActionsAndFilters_DataModelConfig
      */
     var $numberPerPage;
 
+    /**
+     * @var string
+     */
+    var $search;
 
     /**
      * AddActionsAndFilters_DataModelConfig constructor.
@@ -122,6 +126,22 @@ class AddActionsAndFilters_DataModelConfig
     public function setNumberPerPage($numberPerPage)
     {
         $this->numberPerPage = $numberPerPage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearch()
+    {
+        return $this->search;
+    }
+
+    /**
+     * @param string $search
+     */
+    public function setSearch($search)
+    {
+        $this->search = $search;
     }
 
 }
