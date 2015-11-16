@@ -127,14 +127,6 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
     public function addActionsAndFilters()
     {
-
-        // Add options administration page
-        // http://plugin.michael-simpson.com/?page_id=47
-        add_action('in_admin_header', array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));
-
-        // set-screen-option callback - does not work
-        //add_filter('set-screen-option', array('AddActionsAndFilters_ViewAdminPage', 'setScreenOptionCallback'), 10, 3);
-
         add_action('admin_menu', array(&$this, 'addToolsAdminPage'));
         add_action('admin_menu', array(&$this, 'addSettingsPage'));
 
@@ -209,6 +201,14 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     function addToolsAdminPage()
     {
+        if (isset($_REQUEST['page']) && $_REQUEST['page'] == $this->getAdminPageSlug()) {
+            // Hook to add Screen Options to admin page
+            add_action('in_admin_header', array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));
+        }
+
+        // set-screen-option callback - does not work
+        //add_filter('set-screen-option', array('AddActionsAndFilters_ViewAdminPage', 'setScreenOptionCallback'), 10, 3);
+
         if (current_user_can('manage_options')) {
             $this->requireExtraPluginFiles();
             $displayName = $this->getPluginDisplayName();
