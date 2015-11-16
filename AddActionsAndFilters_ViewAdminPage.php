@@ -41,11 +41,16 @@ class AddActionsAndFilters_ViewAdminPage
 
     public function display()
     {
+        require_once('AddActionsAndFilters_AdminViewUrlBuilder.php');
+        $urlBuilder = new AddActionsAndFilters_AdminViewUrlBuilder();
+        $cleanUrl = $urlBuilder->buildUrl(); // no action value in it
+
         echo '<div class="wrap">';
         // Header
         $adminUrl = get_admin_url() . 'admin.php?page=';
-        printf('<table width="%s"><tbody><tr><td><img src="%s"/></td><td align="right"><a href="%s"><img src="%s"/></a><a href="%s"><img src="%s"/></a></td></tr></tbody></table>',
+        printf('<table width="%s"><tbody><tr><td><a href="%s"><img src="%s"/></a></td><td align="right"><a href="%s"><img src="%s"/></a><a href="%s"><img src="%s"/></a></td></tr></tbody></table>',
             '100%',
+            $cleanUrl,
             $this->plugin->getPluginFileUrl('img/admin-banner.png'),
             $adminUrl . $this->plugin->getImportExportSlug(),
             $this->plugin->getPluginFileUrl('img/import-export.png'),
@@ -65,9 +70,7 @@ class AddActionsAndFilters_ViewAdminPage
         echo '</style>';
 
         // Form for bulk actions
-        require_once('AddActionsAndFilters_AdminViewUrlBuilder.php');
-        $urlBuilder = new AddActionsAndFilters_AdminViewUrlBuilder();
-        printf('<form action="%s" method="post">', $urlBuilder->buildUrl());
+        printf('<form action="%s" method="post">', $cleanUrl);
 
         // Code table
         $this->table->display();
