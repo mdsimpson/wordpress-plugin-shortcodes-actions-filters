@@ -20,7 +20,7 @@
     If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once('AddActionsAndFilters_LifeCycle.php');
+require_once('AddActionsAndFilters_LifeCycle.php');
 
 class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 {
@@ -251,9 +251,8 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
         $this->securityCheck();
 
-        require_once('AddActionsAndFilters_AdminPageActions.php');
         require_once('AddActionsAndFilters_DataModelConfig.php');
-        include_once('AddActionsAndFilters_DataModel.php');
+        require_once('AddActionsAndFilters_DataModel.php');
 
         // Set up Data Model
         $config = new AddActionsAndFilters_DataModelConfig();
@@ -269,7 +268,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
         // Init Table
         $dataModel = new AddActionsAndFilters_DataModel($config);
-        include_once('AddActionsAndFilters_CodeListTable.php');
+        require_once('AddActionsAndFilters_CodeListTable.php');
         $table = new AddActionsAndFilters_CodeListTable($dataModel);
         $table->prepare_items();
 
@@ -279,6 +278,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         // Look for actions to be performed
         $action = $table->current_action();
         if ($action && $action != -1) {
+            require_once('AddActionsAndFilters_AdminPageActions.php');
             $actions = new AddActionsAndFilters_AdminPageActions();
             $ids = null;
             if (isset($_REQUEST['cb']) && is_array($_REQUEST['cb'])) {

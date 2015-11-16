@@ -19,7 +19,7 @@
     If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once('AddActionsAndFilters_InstallIndicator.php');
+require_once('AddActionsAndFilters_InstallIndicator.php');
 
 class AddActionsAndFilters_LifeCycle extends AddActionsAndFilters_InstallIndicator {
 

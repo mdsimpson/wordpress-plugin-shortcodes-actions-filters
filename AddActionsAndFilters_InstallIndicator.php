@@ -19,7 +19,7 @@
     If not, see <http://www.gnu.org/licenses/>.
 */
 
-include_once('AddActionsAndFilters_OptionsManager.php');
+require_once('AddActionsAndFilters_OptionsManager.php');
 
 class AddActionsAndFilters_InstallIndicator extends AddActionsAndFilters_OptionsManager {
 
