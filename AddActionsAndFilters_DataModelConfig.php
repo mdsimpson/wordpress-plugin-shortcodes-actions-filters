@@ -22,6 +22,10 @@
 
 class AddActionsAndFilters_DataModelConfig
 {
+
+    const PER_PAGE_OPTION = 'AddActionsAndFilters_codeitems_per_page';
+    const PER_PAGE_DEFAULT = 10;
+
     /**
      * @var int
      */

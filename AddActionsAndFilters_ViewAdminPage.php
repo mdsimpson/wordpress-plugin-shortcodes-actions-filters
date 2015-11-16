@@ -33,6 +33,42 @@ class AddActionsAndFilters_ViewAdminPage
     var $table;
 
 
+    /**
+     * Sets Admin page screen options
+     */
+    public static function addAdminPageScreenOptions()
+    {
+        require_once('AddActionsAndFilters_DataModelConfig.php');
+        $option = 'per_page';
+        $args = array(
+            'label' => 'Code Items',
+            'default' => AddActionsAndFilters_DataModelConfig::PER_PAGE_DEFAULT,
+            'option' => AddActionsAndFilters_DataModelConfig::PER_PAGE_OPTION
+        );
+        add_screen_option($option, $args);
+    }
+
+    // set-screen-option callback - does not work
+//    public static function setScreenOptionCallback($status, $option, $value)
+//    {
+//        // http://chrismarslender.com/2012/01/26/wordpress-screen-options-tutorial/
+//        if (AddActionsAndFilters_DataModelConfig::PER_PAGE_OPTION == $option) {
+//            return $value;
+//        }
+//        return $status;
+//    }
+
+    // Work-around for the above callback not working
+    public static function setScreenOptionCallback($option, $value)
+    {
+        if (AddActionsAndFilters_DataModelConfig::PER_PAGE_OPTION == $option) {
+            $userId = get_current_user_id();
+            if ($userId != 0) {
+                update_user_option($userId, $option, $value);
+            }
+        }
+    }
+
     public function __construct(&$plugin, &$table)
     {
         $this->plugin = $plugin;

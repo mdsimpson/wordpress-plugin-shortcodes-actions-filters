@@ -39,7 +39,11 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
 
     public function __construct(&$dataModel)
     {
-        parent::__construct();
+        parent::__construct(array(
+            'singular' => 'code',   // singular name of the listed records
+            'plural' => 'codes',    // plural name of the listed records
+            'ajax' => true          // does this table support ajax?
+        ));
         $this->dataModel = $dataModel;
         $this->actions = new AddActionsAndFilters_AdminPageActions();
     }
@@ -91,7 +95,10 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
 
         // Pagination
         $totalItems = $this->dataModel->getNumberDataItems();
-        $perPage = $this->dataModel->config->getNumberPerPage();
+        $perPage = $this->get_items_per_page(
+            AddActionsAndFilters_DataModelConfig::PER_PAGE_OPTION,
+            AddActionsAndFilters_DataModelConfig::PER_PAGE_DEFAULT);
+        $this->dataModel->config->setNumberPerPage($perPage);
         $this->dataModel->config->setPage($this->get_pagenum());
         $this->set_pagination_args(array(
             'total_items' => $totalItems,
@@ -122,8 +129,8 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
      * @param $item array
      * @return array
      */
-    public function createRowActions($item) {
-
+    public function createRowActions($item)
+    {
         require_once('AddActionsAndFilters_AdminViewUrlBuilder.php');
         $urlBuilder = new AddActionsAndFilters_AdminViewUrlBuilder();
 

@@ -21,6 +21,7 @@
 */
 
 require_once('AddActionsAndFilters_LifeCycle.php');
+require_once('AddActionsAndFilters_ViewAdminPage.php');
 
 class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 {
@@ -34,7 +35,6 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         //  http://plugin.michael-simpson.com/?page_id=31
         return array(
             '_version' => array('Installed Version'), // For testing upgrades
-            'NumberItemsPerPage' => array('Number of items shown in the Administration Page at a time'), // For testing upgrades
             'DropOnUninstall' => array(__('Delete all added code and settings for this plugin\'s when uninstalling', 'add-actions-and-filters'), 'false', 'true')
         );
     }
@@ -130,6 +130,11 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
         // Add options administration page
         // http://plugin.michael-simpson.com/?page_id=47
+        add_action('in_admin_header', array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));
+
+        // set-screen-option callback - does not work
+        //add_filter('set-screen-option', array('AddActionsAndFilters_ViewAdminPage', 'setScreenOptionCallback'), 10, 3);
+
         add_action('admin_menu', array(&$this, 'addToolsAdminPage'));
         add_action('admin_menu', array(&$this, 'addSettingsPage'));
 
@@ -207,12 +212,15 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         if (current_user_can('manage_options')) {
             $this->requireExtraPluginFiles();
             $displayName = $this->getPluginDisplayName();
-            add_submenu_page('tools.php',
+            $hook = add_submenu_page('tools.php',
                 $displayName,
                 $displayName,
                 'manage_options',
                 $this->getAdminPageSlug(), // slug
                 array(&$this, 'handleAdminPageUrl'));
+
+            // set-screen-option callback - does not work
+            // add_action("load-$hook", array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));
         }
     }
 
@@ -251,6 +259,15 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
         $this->securityCheck();
 
+        // set-screen-option callback - does not work
+        // this is the work-around
+        if (isset($_REQUEST['wp_screen_options']) && is_array($_REQUEST['wp_screen_options'])) {
+            AddActionsAndFilters_ViewAdminPage::setScreenOptionCallback(
+                $_REQUEST['wp_screen_options']['option'],
+                $_REQUEST['wp_screen_options']['value']
+            );
+        }
+
         require_once('AddActionsAndFilters_DataModelConfig.php');
         require_once('AddActionsAndFilters_DataModel.php');
 
@@ -262,9 +279,6 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         if (isset($_REQUEST['order'])) {
             $config->setAsc($_REQUEST['order'] != 'desc');
         }
-        $perPage = $this->getOption('NumberItemsPerPage', '10');
-        $config->setNumberPerPage($perPage);
-
 
         // Init Table
         $dataModel = new AddActionsAndFilters_DataModel($config);
@@ -329,9 +343,8 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      * Display the Plugin's administration page in the WordPress Dashboard
      * @param $table AddActionsAndFilters_CodeListTable
      */
-    function displayAdminTable(&$table)
+    public function displayAdminTable(&$table)
     {
-        require_once('AddActionsAndFilters_ViewAdminPage.php');
         $view = new AddActionsAndFilters_ViewAdminPage($this, $table);
         $view->display();
     }
