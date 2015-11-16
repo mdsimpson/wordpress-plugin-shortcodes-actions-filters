@@ -69,6 +69,16 @@ class AddActionsAndFilters_ViewAdminPage
         }
     }
 
+    public static function addHelpTab() {
+        $screen = get_current_screen();
+        $screen->add_help_tab( array(
+            'id' => 'AddActionsAndFilters_help',
+            'title' => __('Help'),
+            'content' => 'Content TBD', // todo add help tab content
+            //'callback' => $callback
+        ) );
+    }
+
     public function __construct(&$plugin, &$table)
     {
         $this->plugin = $plugin;

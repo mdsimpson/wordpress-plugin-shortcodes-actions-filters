@@ -201,15 +201,16 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     function addToolsAdminPage()
     {
-        if (isset($_REQUEST['page']) && $_REQUEST['page'] == $this->getAdminPageSlug()) {
-            // Hook to add Screen Options to admin page
-            add_action('in_admin_header', array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));
-        }
-
-        // set-screen-option callback - does not work
-        //add_filter('set-screen-option', array('AddActionsAndFilters_ViewAdminPage', 'setScreenOptionCallback'), 10, 3);
-
         if (current_user_can('manage_options')) {
+
+            if (isset($_REQUEST['page']) && $_REQUEST['page'] == $this->getAdminPageSlug()) {
+                // Hook to add Screen Options to admin page
+                add_action('in_admin_header', array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));
+            }
+
+            // set-screen-option callback - does not work
+            //add_filter('set-screen-option', array('AddActionsAndFilters_ViewAdminPage', 'setScreenOptionCallback'), 10, 3);
+
             $this->requireExtraPluginFiles();
             $displayName = $this->getPluginDisplayName();
             $hook = add_submenu_page('tools.php',
@@ -221,6 +222,8 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
             // set-screen-option callback - does not work
             // add_action("load-$hook", array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));
+
+            add_action("load-$hook", array('AddActionsAndFilters_ViewAdminPage', 'addHelpTab'));
         }
     }
 
