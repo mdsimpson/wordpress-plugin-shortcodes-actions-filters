@@ -123,32 +123,31 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
      * @return array
      */
     public function createRowActions($item) {
-        $url = sprintf(get_admin_url() .'admin.php?page=%s&id=%s', $_REQUEST['page'], $item['id']);
-        if (isset($_REQUEST['paged']) && $_REQUEST['paged'] > 1) {
-            $url .= '&paged=' . $_REQUEST['paged'];
-        }
-        if (isset($_REQUEST['orderby']) && $_REQUEST['orderby']) {
-            $url .= '&orderby=' . $_REQUEST['orderby'];
-        }
-        if (isset($_REQUEST['order']) && $_REQUEST['order']) {
-            $url .= '&order=' . $_REQUEST['order'];
-        }
-        $url .= '&action=%s';
-        $tag = '<a href="' . $url . '">%s</a>';
+
+        require_once('AddActionsAndFilters_AdminViewUrlBuilder.php');
+        $urlBuilder = new AddActionsAndFilters_AdminViewUrlBuilder();
+
+        $urlBuilder->setParameter('id', $item['id']);
 
         $rowActions = array();
+        $tag = '<a href="%s">%s</a>';
         if ($item['enabled']) {
             $action = $this->actions->getDeactivateStrings();
-            $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+            $urlBuilder->setParameter('action', $action->getKey());
+            $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
         } else {
             $action = $this->actions->getActivateStrings();
-            $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+            $urlBuilder->setParameter('action', $action->getKey());
+            $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
         }
+
         $action = $this->actions->getEditStrings();
-        $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+        $urlBuilder->setParameter('action', $action->getKey());
+        $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
 
         $action = $this->actions->getDeleteStrings();
-        $rowActions[$action->getKey()] = sprintf($tag, $action->getKey(), $action->getDisplay());
+        $urlBuilder->setParameter('action', $action->getKey());
+        $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
 
         return $rowActions;
     }

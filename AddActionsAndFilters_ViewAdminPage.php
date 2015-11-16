@@ -65,19 +65,9 @@ class AddActionsAndFilters_ViewAdminPage
         echo '</style>';
 
         // Form for bulk actions
-        $actionUrl = $adminUrl . $this->plugin->getAdminPageSlug();
-
-        if ($_REQUEST['paged'] && $_REQUEST['paged']) {
-            $actionUrl .= '&paged=' . $_REQUEST['paged'];
-        }
-        if (isset($_REQUEST['orderby']) && $_REQUEST['orderby']) {
-            $actionUrl .= '&orderby=' . $_REQUEST['orderby'];
-        }
-        if (isset($_REQUEST['order']) && $_REQUEST['order']) {
-            $actionUrl .= '&order=' . $_REQUEST['order'];
-        }
-
-        printf('<form action="%s" method="post">', $actionUrl);
+        require_once('AddActionsAndFilters_AdminViewUrlBuilder.php');
+        $urlBuilder = new AddActionsAndFilters_AdminViewUrlBuilder();
+        printf('<form action="%s" method="post">', $urlBuilder->buildUrl());
 
         // Code table
         $this->table->display();
