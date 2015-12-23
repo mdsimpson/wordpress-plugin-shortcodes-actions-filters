@@ -27,8 +27,6 @@ class AddActionsAndFilters_ViewEditPage
      */
     var $plugin;
 
-    // todo: need item data model for saving & retrieving
-
     public function __construct(&$plugin)
     {
         $this->plugin = $plugin;
@@ -36,12 +34,51 @@ class AddActionsAndFilters_ViewEditPage
 
     public function display($item)
     {
-        ?>
+        $this->outputCodeMirrorScriptsAndCss();
+        $this->outputHeader();
+        $this->outputCodeEditor($item);
+    }
+
+
+    /**
+     * Add CodeMirror scripts for the code editor
+     */
+    public function outputCodeMirrorScriptsAndCss() {
+            $libs = array(
+            'lib/codemirror.js',
+            'lib/codemirror.css',
+            'addon/edit/matchbrackets.js',
+            'mode/htmlmixed/htmlmixed.js',
+            'mode/xml/xml.js',
+            'mode/javascript/javascript.js',
+            'mode/css/css.js',
+            'mode/clike/clike.js',
+            'mode/php/php.js',
+        );
+        $baseUrl = $this->plugin->getPluginFileUrl('codemirror-5.9');
+        foreach ($libs as $lib) {
+            if (substr($lib, -3) == ".js") {
+            ?>
+            <script src="<?php echo "$baseUrl/$lib" ?>"></script>
+            <?php
+            } else if (substr($lib, -4) == ".css") {
+            ?>
+            <link rel="stylesheet" href="<?php echo "$baseUrl/$lib" ?>">
+            <?php
+            }
+        }
+    }
+
+    /**
+     * Add top header table
+     */
+    public function outputHeader() {
+    ?>
         <div class="wrap">
         <table width="100%">
             <tbody>
             <tr>
-                <td align="left"><h2><?php _e('Edit Code', 'add-actions-and-filters'); ?></h2></td>
+                <td align="left"><h2><?php _e('Code Editor', 'add-actions-and-filters'); ?></h2></td>
                 <td align="right">
                     <a href="<?php echo get_admin_url() . 'admin.php?page=' . $this->plugin->getAdminPageSlug() ?>">
                         <img width="128" height="50"
@@ -51,25 +88,70 @@ class AddActionsAndFilters_ViewEditPage
             </tr>
             </tbody>
         </table>
-        <?php
-
-
-        // todo
-        print_r($item);
-
-        echo '</div>';
+        </div>
+    <?php
     }
+
+    /**
+     * Output the main contents of the page including the code editor and metadata fields
+     * @param $item array created by AddActionsAndFilters_DataModel
+     */
+    public function outputCodeEditor($item) {
+            ?>
+    <div class="wrap">
+
+    <table width="100%">
+    <tbody>
+        <tr>
+            <td valign="top">
+                <label for="name">Name:</label>
+            </td>
+            <td valign="top">
+                <input id="name" type="text" value="<?php echo $item['name'] ?>" size="25"/>
+            </td>
+            <td valign="top">
+                <label for="description">Description:</label>
+            </td>
+            <td valign="top">
+                <textarea title="description" id="description" cols="80"><?php echo $item['description'] ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <input type="checkbox" id="enabled" name="enabled" value="true" <?php if ($item['enabled']) echo 'checked' ?>><label for="enabled">Enabled</label>
+            </td>
+            <td valign="top">
+                <input type="checkbox" id="shortcode" name="shortcode" value="true" <?php if ($item['shortcode']) echo 'checked' ?>><label for="shortcode">Shortcode</label>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+
+
+    <textarea title="code" id="codefield"><?php echo $item['code'] ?></textarea>
+
+
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("codefield"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-php",
+        indentUnit: 4,
+        indentWithTabs: true
+      });
+    </script>
+
+    </div>
+
+        <?php
+        submit_button('Save', 'primary', 'savecode');
+
+    }
+
 
     public function old_display() {
         // todo: change to new edit page code
         ?>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-            <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="hosted_button_id" value="SSABNHHPSVWT6">
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0"
-                   name="submit" alt="PayPal - The safer, easier way to pay online!">
-            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-        </form>
 
         <form action='' method='post'>
             <input type="submit" id="savecode" value="Save"/>

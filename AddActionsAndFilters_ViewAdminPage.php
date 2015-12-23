@@ -95,7 +95,7 @@ class AddActionsAndFilters_ViewAdminPage
         echo '<div class="wrap">';
         // Header
         $adminUrl = get_admin_url() . 'admin.php?page=';
-        printf('<table width="%s"><tbody><tr><td><a href="%s"><img src="%s"/></a></td><td align="right"><a href="%s"><img src="%s"/></a><a href="%s"><img src="%s"/></a></td></tr></tbody></table>',
+        printf('<table width="%s"><tbody><tr><td><a href="%s"><img src="%s"/></a></td><td align="right"><span style="white-space: nowrap;"><a href="%s"><img src="%s"/></a><a href="%s"><img src="%s"/></a></span></td></tr></tbody></table>',
             '100%',
             $cleanUrl,
             $this->plugin->getPluginFileUrl('img/admin-banner.png'),
