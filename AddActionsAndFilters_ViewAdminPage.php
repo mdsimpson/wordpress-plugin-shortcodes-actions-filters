@@ -20,6 +20,8 @@
     If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once('AddActionsAndFilters_AdminPageActions.php');
+
 class AddActionsAndFilters_ViewAdminPage
 {
     /**
@@ -105,6 +107,15 @@ class AddActionsAndFilters_ViewAdminPage
             $this->plugin->getPluginFileUrl('img/settings.png')
         );
         printf('<table><tbody><tr><td></td></tr></tbody></table>');
+
+        $actions = new AddActionsAndFilters_AdminPageActions();
+        printf('<a href="%s%s%s%s%s" class="page-title-action">%s</a>',
+            get_admin_url(),
+            'admin.php?page=',
+            $this->plugin->getAdminPageSlug(),
+            '&action=',
+            $actions->getEditKey(),
+            __('Add New'));
 
         // Table Styles
         echo '<style type="text/css">';

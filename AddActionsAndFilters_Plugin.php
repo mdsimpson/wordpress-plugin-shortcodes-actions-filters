@@ -64,13 +64,17 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     protected function installDatabaseTables()
     {
+        $this->ensureDatabaseTableInstalled();
+    }
+
+    public function ensureDatabaseTableInstalled() {
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
         $table_name = $this->getTableName();
 
         $sql =
-            "CREATE TABLE $table_name (\n" .
+            "CREATE TABLE IF NOT EXISTS $table_name (\n" .
             "id mediumint(9) NOT NULL AUTO_INCREMENT, \n" .
             "enabled boolean DEFAULT 0 NOT NULL, \n" .
             "shortcode boolean DEFAULT 0 NOT NULL, \n" .
@@ -164,11 +168,8 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
     }
 
-    // todo new JS editor
     function enqueueAdminPageStylesAndScripts()
     {
-        wp_enqueue_script('edit_area', plugins_url('/edit_area/edit_area_full.js', __FILE__));
-        //wp_enqueue_style('my-style', plugins_url('/css/my-style.css', __FILE__));
     }
 
     /**
@@ -287,7 +288,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         }
 
         // Init DataModel and Table
-        $dataModel = new AddActionsAndFilters_DataModel($config);
+        $dataModel = new AddActionsAndFilters_DataModel($this, $config);
         require_once('AddActionsAndFilters_CodeListTable.php');
         $table = new AddActionsAndFilters_CodeListTable($dataModel);
         $table->prepare_items();
@@ -311,13 +312,19 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
             }
 
             // Perform Actions
-            if ($ids) {
+            if ($action == $actions->getEditKey()) {
+                $item = isset($_REQUEST['id']) ?
+                    $dataModel->getDataItem($_REQUEST['id']) :
+                    array();
+                $showAdminPage = false; // show edit page instead
+                $this->displayEditPage($item);
+            } else if ($ids) {
                 switch ($action) {
                     case $actions->getActivateKey():
-                        $dataModel->activate($ids);
+                        $dataModel->activate($ids, true);
                         break;
                     case $actions->getDeactivateKey():
-                        $dataModel->deactivate($ids);
+                        $dataModel->activate($ids, false);
                         break;
                     case $actions->getDeleteKey();
                         $dataModel->delete($ids);
@@ -325,11 +332,6 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
                     case $actions->getExportKey();
                         // todo: probably need a different mechanism
                         $dataModel->export($ids);
-                        break;
-                    case $actions->getEditKey();
-                        $item = $dataModel->getDataItem($_REQUEST['id']);
-                        $showAdminPage = false; // show edit page instead
-                        $this->displayEditPage($item);
                         break;
                     default:
                         break;
@@ -387,7 +389,9 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     }
 
 
-    // todo: move to an actions class
+    /**
+     * Ajax save function
+     */
     public function ajaxSave()
     {
         if (current_user_can('manage_options')) {
@@ -400,14 +404,23 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
                 header("Content-type: text/plain");
             }
 
-            $code = stripslashes($_REQUEST['code']);
-
-            // Save it as temporarily, potentially fatal code
-            $this->updateOption('tmp_code', $code); // todo use data model
+            require_once('AddActionsAndFilters_DataModelConfig.php');
+            require_once('AddActionsAndFilters_DataModel.php');
+            $config = new AddActionsAndFilters_DataModelConfig();
+            $dataModel = new AddActionsAndFilters_DataModel($this, $config);
+            $id = $dataModel->saveItem($_REQUEST);
+            echo $id;
             die();
         } else {
             die(-1);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdminPageUrl() {
+        return get_admin_url() . 'admin.php?page=' . $this->getAdminPageSlug();
     }
 
 }

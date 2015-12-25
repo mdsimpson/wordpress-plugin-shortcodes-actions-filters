@@ -94,7 +94,7 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         $this->_column_headers = array($columns, $hidden, $sortable);
 
         // Pagination
-        $totalItems = $this->dataModel->getNumberDataItems();
+        $totalItems = $this->dataModel->getNumberOfDataItems();
         $perPage = $this->get_items_per_page(
             AddActionsAndFilters_DataModelConfig::PER_PAGE_OPTION,
             AddActionsAndFilters_DataModelConfig::PER_PAGE_DEFAULT);

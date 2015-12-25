@@ -58,11 +58,11 @@ class AddActionsAndFilters_ViewEditPage
         );
         $baseUrl = $this->plugin->getPluginFileUrl('codemirror-5.9');
         foreach ($libs as $lib) {
-            if (substr($lib, -3) == ".js") {
+            if (substr($lib, -3) == '.js') {
                 ?>
                 <script src="<?php echo "$baseUrl/$lib" ?>"></script>
                 <?php
-            } else if (substr($lib, -4) == ".css") {
+            } else if (substr($lib, -4) == '.css') {
                 ?>
                 <link rel="stylesheet" href="<?php echo "$baseUrl/$lib" ?>">
                 <?php
@@ -82,7 +82,7 @@ class AddActionsAndFilters_ViewEditPage
                 <tr>
                     <td align="left"><h2><?php _e('Code Editor', 'add-actions-and-filters'); ?></h2></td>
                     <td align="right">
-                        <a href="<?php echo get_admin_url() . 'admin.php?page=' . $this->plugin->getAdminPageSlug() ?>">
+                        <a href="<?php echo $this->plugin->getAdminPageUrl() ?>">
                             <img width="128" height="50"
                                  src="<?php echo $this->plugin->getPluginFileUrl('img/icon-256x100.png') ?>">
                         </a>
@@ -107,13 +107,13 @@ class AddActionsAndFilters_ViewEditPage
                 <tbody>
                 <tr>
                     <td valign="top">
-                        <label for="name">Name:</label>
+                        <label for="name"><?php _e('Name') ?></label>
                     </td>
                     <td valign="top">
                         <input id="name" type="text" value="<?php echo $item['name'] ?>" size="25"/>
                     </td>
                     <td valign="top">
-                        <label for="description">Description:</label>
+                        <label for="description"><?php _e('Description') ?></label>
                     </td>
                     <td valign="top">
                         <textarea title="description" id="description"
@@ -121,25 +121,23 @@ class AddActionsAndFilters_ViewEditPage
                     </td>
                 </tr>
                 <tr>
-                    <td valign="top">
-                        <input type="checkbox" id="enabled" name="enabled"
-                               value="true" <?php if ($item['enabled']) echo 'checked' ?>><label
-                            for="enabled">Enabled</label>
-                    </td>
-                    <td valign="top">
+                    <td valign="top" colspan="2">
+                        <input type="checkbox" id="activated" name="activated"
+                               value="true" <?php if ($item['enabled']) echo 'checked' ?>>
+                        <label for="enabled"><?php _e('Activated') ?></label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="checkbox" id="shortcode" name="shortcode"
-                               value="true" <?php if ($item['shortcode']) echo 'checked' ?>><label for="shortcode">Shortcode</label>
+                               value="true" <?php if ($item['shortcode']) echo 'checked' ?>><label
+                            for="shortcode"><?php _e('Shortcode') ?></label>
                     </td>
                 </tr>
                 </tbody>
             </table>
 
-
-            <textarea title="code" id="codefield"><?php echo $item['code'] ?></textarea>
-
+            <textarea title="code" id="code"><?php echo $item['code'] ?></textarea>
 
             <script>
-                var editor = CodeMirror.fromTextArea(document.getElementById("codefield"), {
+                var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                     lineNumbers: true,
                     matchBrackets: true,
                     mode: "text/x-php",
@@ -148,72 +146,47 @@ class AddActionsAndFilters_ViewEditPage
                 });
             </script>
 
+
+            <div id="codesavestatus">&nbsp;</div>
+            <?php submit_button('Save', 'primary', 'savecode'); ?>
+            <script>
+                jQuery(document).ready(function () {
+                    jQuery('#savecode').click(function () {
+                        var item = {
+                            <?php
+                            if (isset($item['id'])) {
+                                echo '"id": ' . $item['id'] . ',';
+                            } ?>
+                            "name": jQuery('#name').val(),
+                            "description": jQuery('#description').val(),
+                            "enabled": jQuery('#activated').is(':checked'),
+                            "shortcode": jQuery('#shortcode').is(':checked'),
+                            "code": editor.getValue()
+                        };
+                        console.log(item);// todo: debug
+                        jQuery.ajax(
+                            {
+                                "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
+                                "type": "POST",
+                                "data": item,
+                                "success": function (data, textStatus) {
+                                    window.location.replace('<?php echo $this->plugin->getAdminPageUrl() ?>&id=' + data + '&action=edit');
+                                },
+                                "error": function (textStatus, errorThrown) {
+                                    jQuery("#codesavestatus").html(textStatus.statusText);
+                                    console.log(textStatus);
+                                    console.log(errorThrown);
+                                },
+                                "beforeSend": function () {
+                                    jQuery("#codesavestatus").html('<img src="<?php echo plugins_url('img/load.gif', __FILE__); ?>">');
+                                }
+                            }
+                        );
+                    })
+                });
+            </script>
         </div>
 
-        <?php
-        submit_button('Save', 'primary', 'savecode');
-
-    }
-
-
-    public function old_display()
-    {
-        // todo: change to new edit page code
-        ?>
-
-        <form action='' method='post'>
-            <input type="submit" id="savecode" value="Save"/>
-
-            <p id="codesavestatus">
-                <?php
-                $fatalCode = $this->getOption('fatal_code', '');
-                $code = $this->getOption('code');
-                $displayCode = $code;
-                if (!empty($fatalCode) && $fatalCode != $code) {
-                    $displayCode = $fatalCode;
-                    $this->updateOption('fatal_code', '');
-                    ?><span style="font-weight: bold; background-color: yellow"><?php
-                    _e('NOT SAVED: Code was not saved because it causes a PHP FATAL ERROR.', 'add-actions-and-filters');
-                    ?></span><?php
-                }
-                ?>
-            </p>
-            <label
-                for="code"><?php _e('Put PHP code here to define functions and add them as <a target="_addactions" href="http://codex.wordpress.org/Function_Reference/add_action">actions</a> or <a target="_addfilter" href="http://codex.wordpress.org/Function_Reference/add_filter">filters</a>. Also add <a target="_scripts" href="http://codex.wordpress.org/Function_Reference/wp_enqueue_script">scripts</a> and <a target="_styles" href="http://codex.wordpress.org/Function_Reference/wp_enqueue_style">styles</a>.', 'add-actions-and-filters'); ?></label>
-            <textarea id="code" style="height: 650px; width: 100%;"
-                      name="test_1"><?php echo $displayCode; ?></textarea>
-        </form>
-
-        <script language="Javascript" type="text/javascript">
-            // initialisation
-            editAreaLoader.init({
-                id: "code"	// id of the textarea to transform
-                , start_highlight: true	// if start with highlight
-                , allow_resize: "both", allow_toggle: true, word_wrap: true, language: "en", syntax: "php"
-            });
-
-            jQuery("#savecode").click(
-                function () {
-                    jQuery.ajax(
-                        {
-                            "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
-                            "type": "POST",
-                            "data": "code=" + encodeURIComponent(editAreaLoader.getValue("code")),
-                            "success": function (data, textStatus) {
-                                //jQuery("#codesavestatus").html(data);
-                                location.reload();
-                            },
-                            "error": function (textStatus, errorThrown) {
-                                jQuery("#codesavestatus").html(errorThrown);
-                            },
-                            "beforeSend": function () {
-                                jQuery("#codesavestatus").html('<img src="<?php echo plugins_url('img/load.gif', __FILE__); ?>">');
-                            }
-                        }
-                    );
-                    return false;
-                });
-        </script>
         <?php
     }
 

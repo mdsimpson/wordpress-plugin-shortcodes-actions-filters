@@ -24,68 +24,73 @@ require_once('AddActionsAndFilters_DataModelConfig.php');
 
 class AddActionsAndFilters_DataModel
 {
+
+    /**
+     * @var AddActionsAndFilters_Plugin
+     */
+    var $plugin;
+
     /**
      * @var AddActionsAndFilters_DataModelConfig
      */
     var $config;
 
-    /**
-     * @var array
-     */
-    var $example_data; // todo: delete!
 
-    public function __construct($config)
+    public function __construct($plugin, $config)
     {
+        $this->plugin = $plugin;
         $this->config = $config;
+    }
 
-        // todo: delete!
-        $i = 1;
-        $text = 'ssdfasfsfa lkjs dflkjasfkj aslkfjdalsjflkasjflkas jdflkasjfklasjflkasjflkasjdf';
-        $this->example_data = array(
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 1, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '1', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-            array('enabled' => 0, 'id' => $i, 'shortcode' => '0', 'name' => 'Code' . $i, 'description' => $text, 'code' => 'blah' . $i++ . '();'),
-        );
+    /**
+     * @param $ids String|array of ids
+     * @param $bool boolean activate (true) or deactivate (false)
+     * @return int|false number of rows affected or false
+     */
+    public function activate($ids, $bool)
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $activate = $bool ? 'true' : 'false';
+        if (is_array($ids)) {
+            $count = count($ids);
+            $placeholders = array_fill(0, $count, '%d');
+            $sql = "update $table set enabled = $activate where id in ( $placeholders )";
+            $sql = $wpdb->prepare($sql, $ids);
+        } else {
+            $sql = "update $table set enabled = $activate where id = %d";
+            $sql = $wpdb->prepare($sql, $ids);
+        }
+        return $wpdb->query($sql);
+    }
 
+    /**
+     * @param $ids String|array of ids
+     * @return int|false number of rows affected or false
+     */
+    public function delete($ids)
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        if (is_array($ids)) {
+            $count = count($ids);
+            $placeholders = array_fill(0, $count, '%d');
+            $sql = "delete from $table where id in ( $placeholders )";
+            $sql = $wpdb->prepare($sql, $ids);
+        } else {
+            $sql = "delete from $table where id = %d";
+            $sql = $wpdb->prepare($sql, $ids);
+        }
+        return $wpdb->query($sql);
     }
 
     /**
      * @param $ids String|array of ids
      */
-    public function activate($ids) {
+    public function export($ids)
+    {
         if (is_array($ids)) {
             // todo
         }
@@ -93,95 +98,113 @@ class AddActionsAndFilters_DataModel
     }
 
     /**
-     * @param $ids String|array of ids
-     */
-    public function deactivate($ids) {
-        if (is_array($ids)) {
-            // todo
-        }
-        // todo: replace with DB query
-    }
-
-    /**
-     * @param $ids String|array of ids
-     */
-    public function delete($ids) {
-        if (is_array($ids)) {
-            // todo
-        }
-        // todo: replace with DB query
-    }
-
-    /**
-     * @param $ids String|array of ids
-     */
-    public function export($ids) {
-        if (is_array($ids)) {
-            // todo
-        }
-        // todo: replace with DB query
-    }
-
-    /**
-     * @return array
+     * @return array associative
      */
     public function getDataItemList()
     {
-        // todo: replace with DB query
-        // Requires PHP 5.3
-        $sorter = new AddActionsAndFilters_Sorter($this->config->getOrderby(), $this->config->isAsc());
-        $sorter->sort($this->example_data);
-
-        $numPerPage = $this->config->getNumberPerPage();
-        $page = $this->config->getPage();
-
-        $dataSlice = array_slice($this->example_data, (($page-1)*$numPerPage), $numPerPage);
-
-        return $dataSlice;
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $sql = $wpdb->prepare("select id, enabled, shortcode, name, description from $table order by %s %s limit %d,%d",
+            $this->config->getOrderby(),
+            $this->config->isAsc() ? 'asc' : 'desc',
+            $this->config->getPage() - 1,
+            $this->config->getNumberPerPage()
+        );
+        return $wpdb->get_results($sql, ARRAY_A);
     }
 
     /**
      * @return int
      */
-    public function getNumberDataItems() {
-        return count($this->example_data);
+    public function getNumberOfDataItems()
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        return $wpdb->get_var("select count(id) from $table");
     }
 
     /**
      * @param $id int
      * @return array
      */
-    public function getDataItem($id) {
-        foreach ($this->example_data as $item) {
-            if ($item['id'] == $id) {
-                return $item;
-            }
+    public function getDataItem($id)
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $sql = $wpdb->prepare("select * from $table where id = %d", $id);
+        return $wpdb->get_row($sql, ARRAY_A);
+    }
+
+    /**
+     * @param $item array
+     * @return int|false
+     */
+    public function saveItem($item)
+    {
+        if (isset($item['id'])) {
+//            return $this->updateItem($item);
+            return $this->updateItem_viaSql($item);
+
+        } else {
+            return $this->insertItem($item);
         }
-        return array();
+    }
+
+    private function insertItem($item)
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $data = array(
+            'name' => stripslashes($item['name']),
+            'description' => stripslashes($item['description']),
+            'enabled' => $item['enabled'] === 'true' ? 1 : 0,
+            'shortcode' => $item['shortcode'] === 'true' ? 1 : 0,
+            'code' => stripslashes($item['code']),
+        );
+        $format = array('%s', '%s', '%d', '%d', '%s');
+        $wpdb->insert($table, $data, $format);
+        return $wpdb->insert_id;
+
+    }
+
+//    private function updateItem($item)
+//    {
+//        // todo: function doesn't work
+//        global $wpdb;
+//        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+//        $table = $this->plugin->getTableName();
+//        $data = array(
+//            'name' => stripslashes($item['name']),
+//            'description' => stripslashes($item['description']),
+//            'enabled' => $item['enabled'] === 'true' ? 1 : 0,
+//            'shortcode' => $item['shortcode'] === 'true' ? 1 : 0,
+//            'code' => stripslashes($item['code']),
+//        );
+//        $format = array('%s', '%s', '%d', '%d', '%s');
+//        $where = array('id', $item['id']);
+//        $where_format = array('%d');
+//        $wpdb->update($table, $data, $where, $format, $where_format);
+//        return $item['id'];
+//    }
+
+
+    private function updateItem_viaSql($item)
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $sql = $wpdb->prepare("update $table set name = %s, description = %s, enabled = %d, shortcode = %d, code = %s where id = %d",
+            stripslashes($item['name']),
+            stripslashes($item['description']),
+            $item['enabled'] === 'true' ? 1 : 0,
+            $item['shortcode'] === 'true' ? 1 : 0,
+            stripslashes($item['code']),
+            $item['id']);
+        $wpdb->query($sql);
+        return $item['id'];
     }
 }
-
-class AddActionsAndFilters_Sorter
-{
-
-    var $orderby = 'id';
-    var $asc = true;
-
-    public function __construct($orderby, $asc)
-    {
-        $this->orderby = $orderby;
-        $this->asc = $asc;
-    }
-
-    public function sort(&$array)
-    {
-        usort($array, function ($a, $b) {
-            if ($this->asc) {
-                return strnatcmp($a[$this->orderby], $b[$this->orderby]);
-            } else {
-                return strnatcmp($b[$this->orderby], $a[$this->orderby]);
-            }
-        });
-    }
-}
-
