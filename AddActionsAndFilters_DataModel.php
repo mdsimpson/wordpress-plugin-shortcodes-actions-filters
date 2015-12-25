@@ -105,12 +105,14 @@ class AddActionsAndFilters_DataModel
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
         $table = $this->plugin->getTableName();
-        $sql = $wpdb->prepare("select id, enabled, shortcode, name, description from $table order by %s %s limit %d,%d",
-            $this->config->getOrderby(),
-            $this->config->isAsc() ? 'asc' : 'desc',
+        $orderby = $this->config->getOrderby();
+        $asc = $this->config->isAsc() ? 'asc' : 'desc';
+        $limit = sprintf(
+            '%d,%d',
             $this->config->getPage() - 1,
             $this->config->getNumberPerPage()
         );
+        $sql = "select id, enabled, shortcode, name, description from $table order by $orderby $asc limit $limit";
         return $wpdb->get_results($sql, ARRAY_A);
     }
 
