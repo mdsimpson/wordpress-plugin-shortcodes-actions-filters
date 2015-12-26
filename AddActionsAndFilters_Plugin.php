@@ -164,8 +164,6 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         // Register AJAX hooks
         // http://plugin.michael-simpson.com/?page_id=41
         add_action('wp_ajax_addactionsandfilters_save', array(&$this, 'ajaxSave'));
-
-
     }
 
     function enqueueAdminPageStylesAndScripts()
@@ -254,109 +252,6 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         }
     }
 
-
-    /**
-     * Handle the URL request for the WP dashboard admin page.
-     * Handle any actions indicated in the URL GET parameters
-     */
-    function handleAdminPageUrl()
-    {
-        $this->securityCheck();
-
-        // set-screen-option callback - does not work
-        // this is the work-around
-        if (isset($_REQUEST['wp_screen_options']) && is_array($_REQUEST['wp_screen_options'])) {
-            AddActionsAndFilters_ViewAdminPage::setScreenOptionCallback(
-                $_REQUEST['wp_screen_options']['option'],
-                $_REQUEST['wp_screen_options']['value']
-            );
-        }
-
-        require_once('AddActionsAndFilters_DataModelConfig.php');
-        require_once('AddActionsAndFilters_DataModel.php');
-
-        // Look for Sorting, ordering and searching
-        $config = new AddActionsAndFilters_DataModelConfig();
-        if (isset($_REQUEST['orderby'])) {
-            $config->setOrderby($_REQUEST['orderby']);
-        }
-        if (isset($_REQUEST['order'])) {
-            $config->setAsc($_REQUEST['order'] != 'desc');
-        }
-        if (isset($_REQUEST['s'])) {
-            $config->setSearch($_REQUEST['s']);
-        }
-
-        // Init DataModel and Table
-        $dataModel = new AddActionsAndFilters_DataModel($this, $config);
-        require_once('AddActionsAndFilters_CodeListTable.php');
-        $table = new AddActionsAndFilters_CodeListTable($dataModel);
-
-        // May be changed if a different page is to be displayed
-        $showAdminPage = true;
-
-        // Look for actions to be performed
-        $action = $table->current_action();
-        if ($action && $action != -1) {
-            require_once('AddActionsAndFilters_AdminPageActions.php');
-            $actions = new AddActionsAndFilters_AdminPageActions();
-            $ids = null;
-            if (isset($_REQUEST['cb']) && is_array($_REQUEST['cb'])) {
-                // check nonce which is on the bulk action form only
-                if (wp_verify_nonce($_REQUEST['_wpnonce'])) {
-                    $ids = $_REQUEST['cb'];
-                }
-            } else if (isset($_REQUEST['id'])) {
-                $ids = array($_REQUEST['id']);
-            }
-
-            // Perform Actions
-            if ($action == $actions->getEditKey()) {
-                $item = isset($_REQUEST['id']) ?
-                    $dataModel->getDataItem($_REQUEST['id']) :
-                    array();
-                $showAdminPage = false; // show edit page instead
-                $this->displayEditPage($item);
-            } else if ($ids) {
-                switch ($action) {
-                    case $actions->getActivateKey():
-                        $dataModel->activate($ids, true);
-                        break;
-                    case $actions->getDeactivateKey():
-                        $dataModel->activate($ids, false);
-                        break;
-                    case $actions->getDeleteKey();
-                        $dataModel->delete($ids);
-                        break;
-                    case $actions->getExportKey();
-                        // todo: probably need a different mechanism
-                        $dataModel->export($ids);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-        }
-
-        // Display Admin Page
-        if ($showAdminPage) {
-            $table->prepare_items();
-            $this->displayAdminTable($table);
-        }
-
-    }
-
-    /**
-     * Display the Plugin's administration page in the WordPress Dashboard
-     * @param $table AddActionsAndFilters_CodeListTable
-     */
-    public function displayAdminTable(&$table)
-    {
-        $view = new AddActionsAndFilters_ViewAdminPage($this, $table);
-        $view->display();
-    }
-
     public function securityCheck()
     {
         if (!current_user_can('manage_options')) {
@@ -394,26 +289,9 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     public function ajaxSave()
     {
-        if (current_user_can('manage_options')) {
-            if (!headers_sent()) {
-                // Don't let IE cache this request
-                header("Pragma: no-cache");
-                header("Cache-Control: no-cache, must-revalidate");
-                header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
-
-                header("Content-type: text/plain");
-            }
-
-            require_once('AddActionsAndFilters_DataModelConfig.php');
-            require_once('AddActionsAndFilters_DataModel.php');
-            $config = new AddActionsAndFilters_DataModelConfig();
-            $dataModel = new AddActionsAndFilters_DataModel($this, $config);
-            $id = $dataModel->saveItem($_REQUEST);
-            echo $id;
-            die();
-        } else {
-            die(-1);
-        }
+        require_once('AddActionsAndFilters_AdminPageController.php');
+        $controller = new AddActionsAndFilters_AdminPageController($this);
+        $controller->ajaxSave();
     }
 
     /**
@@ -421,6 +299,12 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     public function getAdminPageUrl() {
         return get_admin_url() . 'admin.php?page=' . $this->getAdminPageSlug();
+    }
+
+    function handleAdminPageUrl() {
+        require_once('AddActionsAndFilters_AdminPageController.php');
+        $controller = new AddActionsAndFilters_AdminPageController($this);
+        $controller->handleAdminPageUrl();
     }
 
 }
