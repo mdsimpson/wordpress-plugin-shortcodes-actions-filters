@@ -56,6 +56,7 @@ class AddActionsAndFilters_DataModel
         if (is_array($ids)) {
             $count = count($ids);
             $placeholders = array_fill(0, $count, '%d');
+            $placeholders = implode(', ', $placeholders);
             $sql = "update $table set enabled = $activate where id in ( $placeholders )";
             $sql = $wpdb->prepare($sql, $ids);
         } else {
@@ -77,6 +78,7 @@ class AddActionsAndFilters_DataModel
         if (is_array($ids)) {
             $count = count($ids);
             $placeholders = array_fill(0, $count, '%d');
+            $placeholders = implode(', ', $placeholders);
             $sql = "delete from $table where id in ( $placeholders )";
             $sql = $wpdb->prepare($sql, $ids);
         } else {

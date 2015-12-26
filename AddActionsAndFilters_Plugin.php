@@ -291,7 +291,6 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         $dataModel = new AddActionsAndFilters_DataModel($this, $config);
         require_once('AddActionsAndFilters_CodeListTable.php');
         $table = new AddActionsAndFilters_CodeListTable($dataModel);
-        $table->prepare_items();
 
         // May be changed if a different page is to be displayed
         $showAdminPage = true;
@@ -342,6 +341,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 
         // Display Admin Page
         if ($showAdminPage) {
+            $table->prepare_items();
             $this->displayAdminTable($table);
         }
 

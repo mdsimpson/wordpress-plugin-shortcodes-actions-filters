@@ -138,20 +138,20 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
 
         $rowActions = array();
         $tag = '<a href="%s">%s</a>';
-        if ($item['enabled']) {
-            $action = $this->actions->getDeactivateStrings();
-            $urlBuilder->setParameter('action', $action->getKey());
-            $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
-        } else {
-            $action = $this->actions->getActivateStrings();
-            $urlBuilder->setParameter('action', $action->getKey());
-            $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
-        }
 
+        // Activate/Deactivate Action
+        $action = $item['enabled'] ?
+            $action = $this->actions->getDeactivateStrings() :
+            $action = $this->actions->getActivateStrings();
+        $urlBuilder->setParameter('action', $action->getKey());
+        $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
+
+        // Edit Action
         $action = $this->actions->getEditStrings();
         $urlBuilder->setParameter('action', $action->getKey());
         $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
 
+        // Delete Action
         $action = $this->actions->getDeleteStrings();
         $urlBuilder->setParameter('action', $action->getKey());
         $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());

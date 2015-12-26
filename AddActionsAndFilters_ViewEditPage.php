@@ -163,7 +163,7 @@ class AddActionsAndFilters_ViewEditPage
                             "shortcode": jQuery('#shortcode').is(':checked'),
                             "code": editor.getValue()
                         };
-                        console.log(item);// todo: debug
+                        //console.log(item); // debug
                         jQuery.ajax(
                             {
                                 "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
