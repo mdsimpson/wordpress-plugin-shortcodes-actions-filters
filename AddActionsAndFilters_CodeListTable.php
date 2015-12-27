@@ -220,5 +220,13 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         return '<span class="item-inactive">' . $text . '</span>';
     }
 
+    /**
+     * @param $nonce string
+     * @return false|int from wp_verify_nonce
+     * @see https://gist.github.com/petenelson/8981536
+     */
+    public function verifyBulkNonce($nonce) {
+        return wp_verify_nonce($nonce, 'bulk-' . $this->_args['plural']);
+    }
 
 }

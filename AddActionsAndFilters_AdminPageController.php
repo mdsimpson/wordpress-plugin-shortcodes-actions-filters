@@ -85,7 +85,7 @@ class AddActionsAndFilters_AdminPageController
             $ids = null;
             if (isset($_REQUEST['cb']) && is_array($_REQUEST['cb'])) {
                 // check nonce which is on the bulk action form only
-                if (wp_verify_nonce($_REQUEST['_wpnonce'])) {
+                if ($table->verifyBulkNonce($_REQUEST['_wpnonce'])) {
                     $ids = $_REQUEST['cb'];
                 }
             } else if (isset($_REQUEST['id'])) {
@@ -118,7 +118,6 @@ class AddActionsAndFilters_AdminPageController
                         break;
                 }
             }
-
         }
 
         // Display Admin Page
