@@ -138,6 +138,7 @@ class AddActionsAndFilters_ViewEditPage
 
 
             <div id="sc_info_instructions_open">
+                <code>function handle_shortcode ( $atts, $content = null ) {</code><br/>
             </div>
             <textarea title="code" id="code"><?php echo $item['code'] ?></textarea>
             <div id="sc_info_instructions_close">
@@ -195,7 +196,8 @@ class AddActionsAndFilters_ViewEditPage
             </script>
 
             <div id="sc_info_shortcode_instructions">
-                <table width="350px"><tbody>
+                <table width="350px">
+                    <tbody>
                     <tr>
                         <td><code>[shortcode arg="value"]</code></td>
                         <td><code>$atts['arg']</code></td>
@@ -204,17 +206,60 @@ class AddActionsAndFilters_ViewEditPage
                         <td><code>[shortcode]content[/shortcode]</code></td>
                         <td><code>$content</code></td>
                     </tr>
-                    </tbody></table>
+                    </tbody>
+                </table>
             </div>
+        </div>
+        <div id="af_info_instructions">
+
+            <?php
+            $action_example = 'function email_friends( $post_ID ) {
+    $friends = \'bob@example.org, susie@example.org\';
+    wp_mail( $friends, "sally\'s blog updated", \'I just put something on my blog: http://blog.example.com\' );
+    return $post_ID;
+}
+add_action( \'publish_post\', \'email_friends\' );';
+
+            $filter_example = 'function bold_title( $title ) {
+    return \'&lt;b&gt;\' . $title . \'&lt;/b&gt;\';
+}
+add_filter( \'the_title\', bold_title );';
+            ?>
+            <table>
+                <tbody>
+                <tr>
+                    <td><h3 style="margin:0">Add Action</h3></td>
+                    <td><a href="https://codex.wordpress.org/Function_Reference/add_action" target="_blank">add_action(
+                            $hook, $function_to_add, $priority, $accepted_args );</a></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <pre><code><?php echo $action_example ?></code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td><h3 style="margin:0">Add Filter</h3></td>
+                    <td><a href="https://codex.wordpress.org/Function_Reference/add_filter" target="_blank">add_filter(
+                            $tag, $function_to_add, $priority, $accepted_args );</a></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <pre><code><?php echo $filter_example ?></code></pre>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
         </div>
 
         <script>
             function displayShortCodeToggle() {
                 if (jQuery('#shortcode').is(':checked')) {
-                    jQuery('#sc_info_instructions_open').html('<code>function ' + jQuery('#name').val() + ' ( $atts, $content = null ) {</code><br/>');
-                    jQuery('[id^=sc_]').show();
+                    jQuery('[id^=sc_info]').show();
+                    jQuery('[id^=af_info]').hide();
                 } else {
-                    jQuery('[id^=sc_]').hide();
+                    jQuery('[id^=sc_info]').hide();
+                    jQuery('[id^=af_info]').show();
                 }
             }
             displayShortCodeToggle();
