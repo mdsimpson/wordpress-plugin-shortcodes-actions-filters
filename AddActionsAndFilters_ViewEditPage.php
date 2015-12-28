@@ -110,7 +110,9 @@ class AddActionsAndFilters_ViewEditPage
                         <label for="name"><?php _e('Name') ?></label>
                     </td>
                     <td valign="top">
+                        <span id="sc_info_open" style="display: none;">[</span>
                         <input id="name" type="text" value="<?php echo $item['name'] ?>" size="25"/>
+                        <span id="sc_info_close" style="display: none;">]</span>
                     </td>
                     <td valign="top">
                         <label for="description"><?php _e('Description') ?></label>
@@ -134,7 +136,13 @@ class AddActionsAndFilters_ViewEditPage
                 </tbody>
             </table>
 
+
+            <div id="sc_info_instructions_open">
+            </div>
             <textarea title="code" id="code"><?php echo $item['code'] ?></textarea>
+            <div id="sc_info_instructions_close">
+                <code>}</code>
+            </div>
 
             <script>
                 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -185,7 +193,39 @@ class AddActionsAndFilters_ViewEditPage
                     })
                 });
             </script>
+
+            <div id="sc_info_shortcode_instructions">
+                <table width="350px"><tbody>
+                    <tr>
+                        <td><code>[shortcode arg="value"]</code></td>
+                        <td><code>$atts['arg']</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>[shortcode]content[/shortcode]</code></td>
+                        <td><code>$content</code></td>
+                    </tr>
+                    </tbody></table>
+            </div>
         </div>
+
+        <script>
+            function displayShortCodeToggle() {
+                if (jQuery('#shortcode').is(':checked')) {
+                    jQuery('#sc_info_instructions_open').html('<code>function ' + jQuery('#name').val() + ' ( $atts, $content = null ) {</code><br/>');
+                    jQuery('[id^=sc_]').show();
+                } else {
+                    jQuery('[id^=sc_]').hide();
+                }
+            }
+            displayShortCodeToggle();
+
+            jQuery('#shortcode').click(function () {
+                displayShortCodeToggle();
+            });
+            jQuery('#name').keyup(function () {
+                displayShortCodeToggle();
+            });
+        </script>
 
         <?php
     }
