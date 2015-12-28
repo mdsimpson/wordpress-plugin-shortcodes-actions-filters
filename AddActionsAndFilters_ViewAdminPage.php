@@ -77,7 +77,10 @@ class AddActionsAndFilters_ViewAdminPage
         $screen->add_help_tab(array(
             'id' => 'AddActionsAndFilters_help',
             'title' => __('Help'),
-            'content' => 'Content TBD', // todo add help tab content
+            'content' =>
+                '<a href="https://codex.wordpress.org/Shortcode_API" target="_blank">Shortcode</a></br>
+                <a href="https://codex.wordpress.org/Function_Reference/add_action" target="_blank">add_action</a></br>
+                <a href="https://codex.wordpress.org/Function_Reference/add_filter" target="_blank">add_filter</a>',
             //'callback' => $callback
         ));
     }
