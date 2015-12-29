@@ -100,9 +100,10 @@ class AddActionsAndFilters_DataModel
     }
 
     /**
-     * @return array associative
+     * @param null|false|string $search
+     * @return array|null|object
      */
-    public function getDataItemList()
+    public function getDataItemList($search = null)
     {
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
@@ -114,7 +115,12 @@ class AddActionsAndFilters_DataModel
             $this->config->getPage() - 1,
             $this->config->getNumberPerPage()
         );
-        $sql = "select id, enabled, shortcode, name, description from $table order by $orderby $asc limit $limit";
+        $sql = "select id, enabled, shortcode, name, description from $table";
+        if ($search) {
+            $param = "%$search%";
+            $sql .= $wpdb->prepare(' where name like %s or description like %s', $param, $param);
+        }
+        $sql .= " order by $orderby $asc limit $limit";
         return $wpdb->get_results($sql, ARRAY_A);
     }
 

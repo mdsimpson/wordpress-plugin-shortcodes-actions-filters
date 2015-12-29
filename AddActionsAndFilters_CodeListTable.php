@@ -107,7 +107,8 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         ));
 
         // Data
-        $this->items = $this->dataModel->getDataItemList();
+        $search = (isset($_REQUEST['s'])) ? $_REQUEST['s'] : false;
+        $this->items = $this->dataModel->getDataItemList($search);
     }
 
     /**
