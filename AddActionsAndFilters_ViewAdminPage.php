@@ -122,11 +122,12 @@ class AddActionsAndFilters_ViewAdminPage
 
         // Table Styles
         echo '<style type="text/css">';
-        echo '.wp-list-table .column-id { width: 7%;}';
-        echo '.wp-list-table .column-enabled { width: 12%; text-align: center;}';
-        echo '.wp-list-table .column-shortcode { width: 14%; text-align: center;}';
+        echo '.wp-list-table .column-id { width: 7%; }';
+        echo '.wp-list-table .column-enabled { width: 10%; }';
+        echo '.wp-list-table .column-shortcode { width: 7%; }';
         echo '.wp-list-table .column-name { width: 25%; }';
-        echo '.wp-list-table .column-description { width: 42%; }';
+        echo '.wp-list-table .column-capability { width: 20%; }';
+        echo '.wp-list-table .column-description { width: 31%; }';
         echo '.wp-list-table .item-inactive { font-style: italic; opacity: 0.6; filter: alpha(opacity = 60); /* MSIE */ }';
         echo '</style>';
 

@@ -109,7 +109,7 @@ class AddActionsAndFilters_ViewEditPage
                     <td valign="top">
                         <label for="name"><?php _e('Name') ?></label>
                     </td>
-                    <td valign="top">
+                    <td valign="top" nowrap>
                         <span id="sc_info_open" style="display: none;">[</span>
                         <input id="name" type="text" value="<?php echo $item['name'] ?>" size="25"/>
                         <span id="sc_info_close" style="display: none;">]</span>
@@ -131,6 +131,29 @@ class AddActionsAndFilters_ViewEditPage
                         <input type="checkbox" id="shortcode" name="shortcode"
                                value="true" <?php if ($item['shortcode']) echo 'checked' ?>><label
                             for="shortcode"><?php _e('Shortcode') ?></label>
+                    </td>
+                    <td valign="top">
+                        <label for="capability"><?php _e('Execute only for', 'add-actions-and-filters') ?></label>
+                    </td>
+                    <td valign="top">
+                        <select id="capability">
+                            <option value=""></option>
+                            <?php
+                            $cap_found = false;
+                            foreach ($this->getCapabilityToRolesList() as $cap => $roles) {
+                                $roles = implode(', ', $roles);
+                                $selected = '';
+                                if ($cap == $item['capability']) {
+                                    $selected =  'selected';
+                                    $cap_found = true;
+                                }
+                                echo "<option value=\"$cap\" $selected>$cap ($roles)</option>";
+                            }
+                            if (!$cap_found) {
+                                echo "<option value=\"{$item['capability']}\" selected>{$item['capability']}</option>";
+                            }
+                            ?>
+                        </select>
                     </td>
                 </tr>
                 </tbody>
@@ -170,6 +193,7 @@ class AddActionsAndFilters_ViewEditPage
                             "description": jQuery('#description').val(),
                             "enabled": jQuery('#activated').is(':checked'),
                             "shortcode": jQuery('#shortcode').is(':checked'),
+                            "capability": jQuery('#capability').val(),
                             "code": editor.getValue()
                         };
                         //console.log(item); // debug
@@ -275,4 +299,23 @@ add_filter( \'the_title\', bold_title );';
         <?php
     }
 
+    /**
+     * @return array of capability => array[roles that have it]
+     */
+    public function getCapabilityToRolesList() {
+        global $wp_roles;
+        $capToRoles = array();
+        foreach (array_reverse(array_keys($wp_roles->roles)) as $role) {
+            foreach (array_keys($wp_roles->roles[$role]['capabilities']) as $cap) {
+                if (strpos($cap, 'level_') === 0) {
+                    continue; // skip deprecated roles "level_*"
+                }
+                if (!isset($capToRoles[$cap])) {
+                    $capToRoles[$cap] = array();
+                }
+                $capToRoles[$cap][] = $role;
+            }
+        }
+        return $capToRoles;
+    }
 }

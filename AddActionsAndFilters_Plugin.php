@@ -79,8 +79,8 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
             "enabled boolean DEFAULT 0 NOT NULL, \n" .
             "shortcode boolean DEFAULT 0 NOT NULL, \n" .
             "name tinytext DEFAULT '' NOT NULL, \n" .
+            "capability tinytext, \n" .
             "description tinytext DEFAULT '' NOT NULL, \n" .
-            "echo boolean DEFAULT 0 NOT NULL, \n" .
             "code text DEFAULT '' NOT NULL, \n" .
             "UNIQUE KEY id (id) \n" .
             ") $charset_collate;";

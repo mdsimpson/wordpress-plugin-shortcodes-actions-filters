@@ -58,11 +58,12 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
     {
         $columns = array(
             'cb' => '<input type="checkbox" />',
-            'id' => 'ID',
-            'enabled' => 'Enabled',
-            'shortcode' => 'Shortcode',
-            'name' => 'Name',
-            'description' => 'Description'
+            'id' => __('ID', 'add-actions-and-filters'),
+            'enabled' => __('Active', 'add-actions-and-filters'),
+            'shortcode' => __('SC', 'add-actions-and-filters'),
+            'name' => __('Name', 'add-actions-and-filters'),
+            'capability' => __('Execute only for', 'add-actions-and-filters'),
+            'description' => __('Description', 'add-actions-and-filters')
         );
         return $columns;
     }
@@ -74,6 +75,7 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
             'enabled' => array('enabled', true),
             'shortcode' => array('shortcode', true),
             'name' => array('name', true),
+            'capability' => array('capability', true),
             'description' => array('description', true)
         );
         return $sortable_columns;
