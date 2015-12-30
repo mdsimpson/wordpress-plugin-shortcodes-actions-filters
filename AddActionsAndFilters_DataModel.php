@@ -155,15 +155,14 @@ class AddActionsAndFilters_DataModel
     public function saveItem($item)
     {
         if (isset($item['id'])) {
-//            return $this->updateItem($item);
-            return $this->updateItem_viaSql($item);
+            return $this->updateItem($item);
 
         } else {
             return $this->insertItem($item);
         }
     }
 
-    private function insertItem($item)
+    protected function insertItem($item)
     {
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
@@ -183,30 +182,7 @@ class AddActionsAndFilters_DataModel
 
     }
 
-//    private function updateItem($item)
-//    {
-//        // todo: function doesn't work
-//        global $wpdb;
-//        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
-//        $table = $this->plugin->getTableName();
-//        $data = array(
-//            'name' => stripslashes($item['name']),
-//            'description' => stripslashes($item['description']),
-//            'capability' => stripslashes($item['capability']),
-//            'enabled' => $item['enabled'] === 'true' ? 1 : 0,
-//            'shortcode' => $item['shortcode'] === 'true' ? 1 : 0,
-//            'shortcode' => $item['inadmin'] === 'true' ? 1 : 0,
-//            'code' => stripslashes($item['code']),
-//        );
-//        $format = array('%s', '%s', '%s', '%d', '%d', '%d', '%s');
-//        $where = array('id', $item['id']);
-//        $where_format = array('%d');
-//        $wpdb->update($table, $data, $where, $format, $where_format);
-//        return $item['id'];
-//    }
-
-
-    private function updateItem_viaSql($item)
+    protected function updateItem($item)
     {
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
