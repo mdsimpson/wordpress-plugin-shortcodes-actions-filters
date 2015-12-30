@@ -115,7 +115,7 @@ class AddActionsAndFilters_DataModel
             $this->config->getPage() - 1,
             $this->config->getNumberPerPage()
         );
-        $sql = "select id, enabled, shortcode, name, capability, description from $table";
+        $sql = "select id, enabled, shortcode, inadmin, name, capability, description from $table";
         if ($search) {
             $param = "%$search%";
             $sql .= $wpdb->prepare(' where name like %s or description like %s', $param, $param);
@@ -173,6 +173,7 @@ class AddActionsAndFilters_DataModel
             'description' => stripslashes($item['description']),
             'enabled' => $item['enabled'] === 'true' ? 1 : 0,
             'shortcode' => $item['shortcode'] === 'true' ? 1 : 0,
+            'inadmin' => $item['inadmin'] === 'true' ? 1 : 0,
             'capability' => stripslashes($item['capability']),
             'code' => stripslashes($item['code']),
         );
@@ -194,9 +195,10 @@ class AddActionsAndFilters_DataModel
 //            'capability' => stripslashes($item['capability']),
 //            'enabled' => $item['enabled'] === 'true' ? 1 : 0,
 //            'shortcode' => $item['shortcode'] === 'true' ? 1 : 0,
+//            'shortcode' => $item['inadmin'] === 'true' ? 1 : 0,
 //            'code' => stripslashes($item['code']),
 //        );
-//        $format = array('%s', '%s', '%s', '%d', '%d', '%s');
+//        $format = array('%s', '%s', '%s', '%d', '%d', '%d', '%s');
 //        $where = array('id', $item['id']);
 //        $where_format = array('%d');
 //        $wpdb->update($table, $data, $where, $format, $where_format);
@@ -209,12 +211,14 @@ class AddActionsAndFilters_DataModel
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
         $table = $this->plugin->getTableName();
-        $sql = $wpdb->prepare("update $table set name = %s, description = %s, capability = %s, enabled = %d, shortcode = %d, code = %s where id = %d",
+        $sql = $wpdb->prepare(
+            "update $table set name = %s, description = %s, capability = %s, enabled = %d, shortcode = %d, inadmin = %d, code = %s where id = %d",
             stripslashes($item['name']),
             stripslashes($item['description']),
             stripslashes($item['capability']),
             $item['enabled'] === 'true' ? 1 : 0,
             $item['shortcode'] === 'true' ? 1 : 0,
+            $item['inadmin'] === 'true' ? 1 : 0,
             stripslashes($item['code']),
             $item['id']);
         $wpdb->query($sql);

@@ -129,8 +129,8 @@ class AddActionsAndFilters_ViewEditPage
                         <label for="enabled"><?php _e('Activated') ?></label>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="checkbox" id="shortcode" name="shortcode"
-                               value="true" <?php if ($item['shortcode']) echo 'checked' ?>><label
-                            for="shortcode"><?php _e('Shortcode') ?></label>
+                               value="true" <?php if ($item['shortcode']) echo 'checked' ?>>
+                        <label for="shortcode"><?php _e('Shortcode') ?></label>
                     </td>
                     <td valign="top">
                         <label for="capability"><?php _e('Execute only for', 'add-actions-and-filters') ?></label>
@@ -144,7 +144,7 @@ class AddActionsAndFilters_ViewEditPage
                                 $roles = implode(', ', $roles);
                                 $selected = '';
                                 if ($cap == $item['capability']) {
-                                    $selected =  'selected';
+                                    $selected = 'selected';
                                     $cap_found = true;
                                 }
                                 echo "<option value=\"$cap\" $selected>$cap ($roles)</option>";
@@ -156,15 +156,26 @@ class AddActionsAndFilters_ViewEditPage
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="3">
+                    </td>
+                    <td>
+                        <div id="af_info_inadmin" style="display: none;">
+                            <input type="checkbox" id="inadmin" name="inadmin"
+                                   value="true" <?php if ($item['inadmin']) echo 'checked' ?>>
+                            <label for="inadmin"><?php _e('Execute also on Dashboard Pages', 'add-actions-and-filters') ?></label>
+                        </div>
+                    </td>
+                </tr>
                 </tbody>
             </table>
 
 
-            <div id="sc_info_instructions_open">
+            <div id="sc_info_instructions_open" style="display: none;">
                 <code>function handle_shortcode ( $atts, $content = null ) {</code><br/>
             </div>
             <textarea title="code" id="code"><?php echo $item['code'] ?></textarea>
-            <div id="sc_info_instructions_close">
+            <div id="sc_info_instructions_close" style="display: none;">
                 <code>}</code>
             </div>
 
@@ -193,6 +204,7 @@ class AddActionsAndFilters_ViewEditPage
                             "description": jQuery('#description').val(),
                             "enabled": jQuery('#activated').is(':checked'),
                             "shortcode": jQuery('#shortcode').is(':checked'),
+                            "inadmin": jQuery('#inadmin').is(':checked'),
                             "capability": jQuery('#capability').val(),
                             "code": editor.getValue()
                         };
@@ -219,7 +231,7 @@ class AddActionsAndFilters_ViewEditPage
                 });
             </script>
 
-            <div id="sc_info_shortcode_instructions">
+            <div id="sc_info_shortcode_instructions" style="display: none;">
                 <table width="350px">
                     <tbody>
                     <tr>
@@ -234,7 +246,7 @@ class AddActionsAndFilters_ViewEditPage
                 </table>
             </div>
         </div>
-        <div id="af_info_instructions">
+        <div id="af_info_instructions" style="display: none;">
 
             <?php
             $action_example = 'function email_friends( $post_ID ) {
@@ -302,7 +314,8 @@ add_filter( \'the_title\', bold_title );';
     /**
      * @return array of capability => array[roles that have it]
      */
-    public function getCapabilityToRolesList() {
+    public function getCapabilityToRolesList()
+    {
         global $wp_roles;
         $capToRoles = array();
         foreach (array_reverse(array_keys($wp_roles->roles)) as $role) {
