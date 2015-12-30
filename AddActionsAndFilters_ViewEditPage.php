@@ -256,10 +256,10 @@ class AddActionsAndFilters_ViewEditPage
 }
 add_action( \'publish_post\', \'email_friends\' );';
 
-            $filter_example = 'function bold_title( $title ) {
-    return \'&lt;b&gt;\' . $title . \'&lt;/b&gt;\';
+            $filter_example = 'function prefix_title( $title, $id = null ) {
+    return "The title is: $title";
 }
-add_filter( \'the_title\', bold_title );';
+add_filter( \'the_title\', prefix_title, 10, 2 );';
             ?>
             <table>
                 <tbody>

@@ -151,7 +151,10 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     }
 
     public function registerSavedActionsFiltersAndShortcodes() {
-        // todo
+        require_once('AddActionsAndFilters_Executor.php');
+        $exec = new AddActionsAndFilters_Executor($this);
+        $codeItems = $exec->getCodeItemsToExecute(is_admin());
+        $exec->executeCodeItems($codeItems);
     }
 
     /**
