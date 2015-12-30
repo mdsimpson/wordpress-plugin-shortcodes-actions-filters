@@ -21,7 +21,6 @@
 */
 
 require_once('AddActionsAndFilters_LifeCycle.php');
-require_once('AddActionsAndFilters_ViewAdminPage.php');
 
 class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
 {
@@ -34,7 +33,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
         //  http://plugin.michael-simpson.com/?page_id=31
         return array(
-            '_version' => array('Installed Version'), // For testing upgrades
+            //'_version' => array('Installed Version'), // For testing upgrades
             'DropOnUninstall' => array(__('Delete all added code and settings for this plugin\'s when uninstalling', 'add-actions-and-filters'), 'false', 'true')
         );
     }
@@ -133,41 +132,25 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
         add_action('admin_menu', array(&$this, 'addToolsAdminPage'));
         add_action('admin_menu', array(&$this, 'addSettingsPage'));
-
-        // Example adding a script & style just for the options administration page
-        // http://plugin.michael-simpson.com/?page_id=47
-        if (strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false) {
-            add_action('admin_enqueue_scripts', array(&$this, 'enqueueAdminPageStylesAndScripts'));
-        }
-
-        // Add Actions & Filters
-        // http://plugin.michael-simpson.com/?page_id=37
-
-        // todo: revisit
-        $tmpCode = $this->getOption('tmp_code', '');
-        $code = $this->getOption('code');
-        if (!empty($tmpCode) && $tmpCode != $code) {
-            // Test that the code works
-            $this->updateOption('tmp_code', '');
-            $this->updateOption('fatal_code', $tmpCode);
-            eval($tmpCode); // Make raise FATAL error
-            $this->updateOption('code', $tmpCode);
-            $this->updateOption('fatal_code', '');
-        } else {
-            eval($code);
-        }
-
-        // Register short codes
-        // http://plugin.michael-simpson.com/?page_id=39
-
-
-        // Register AJAX hooks
-        // http://plugin.michael-simpson.com/?page_id=41
         add_action('wp_ajax_addactionsandfilters_save', array(&$this, 'ajaxSave'));
+
+        if (strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false) {
+            // Don't exec the code on this page so that you can come back to this page
+            // and fix fatal errors.
+
+            //add_action('admin_enqueue_scripts', array(&$this, 'enqueueAdminPageStylesAndScripts'));
+        } else {
+            $this->registerSavedActionsFiltersAndShortcodes();
+        }
+
     }
 
     function enqueueAdminPageStylesAndScripts()
     {
+    }
+
+    public function registerSavedActionsFiltersAndShortcodes() {
+        // todo
     }
 
     /**
@@ -202,6 +185,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
         if (current_user_can('manage_options')) {
 
+            require_once('AddActionsAndFilters_ViewAdminPage.php');
             if (isset($_REQUEST['page']) && $_REQUEST['page'] == $this->getAdminPageSlug()) {
                 // Hook to add Screen Options to admin page
                 add_action('in_admin_header', array('AddActionsAndFilters_ViewAdminPage', 'addAdminPageScreenOptions'));

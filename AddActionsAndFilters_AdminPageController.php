@@ -134,6 +134,7 @@ class AddActionsAndFilters_AdminPageController
      */
     public function displayAdminTable(&$table)
     {
+        require_once('AddActionsAndFilters_ViewAdminPage.php');
         $view = new AddActionsAndFilters_ViewAdminPage($this->plugin, $table);
         $view->display();
     }
