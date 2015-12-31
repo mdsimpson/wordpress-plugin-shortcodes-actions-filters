@@ -27,7 +27,6 @@ class AddActionsAndFilters_ViewImportExport
      */
     var $plugin;
 
-    // todo: need item data model for saving & retrieving
 
     public function __construct(&$plugin)
     {
@@ -36,28 +35,97 @@ class AddActionsAndFilters_ViewImportExport
 
     public function display()
     {
+        $this->outputHeader();
+        $this->outputExport();
+        $this->outputImport();
+        $this->outputPhpShortcodeExecListing();
+    }
+
+    public function outputHeader()
+    {
         ?>
         <div class="wrap">
-        <table width="100%">
-            <tbody>
-            <tr>
-                <td align="left"><h2><?php _e('Import / Export', 'add-actions-and-filters'); ?></h2></td>
-                <td align="right">
-                    <a href="<?php echo $this->plugin->getAdminPageUrl() ?>">
-                        <img width="128" height="50"
-                             src="<?php echo $this->plugin->getPluginFileUrl('img/icon-256x100.png') ?>">
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <table width="100%">
+                <tbody>
+                <tr>
+                    <td align="left"><h2><?php _e('Import / Export', 'add-actions-and-filters'); ?></h2></td>
+                    <td align="right">
+                        <a href="<?php echo $this->plugin->getAdminPageUrl() ?>">
+                            <img width="128" height="50"
+                                 src="<?php echo $this->plugin->getPluginFileUrl('img/icon-256x100.png') ?>">
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <?php
-
-
-        // todo
-
-
-        echo '</div>';
     }
+
+    public function outputExport()
+    {
+        echo '<h3>';
+        _e('Export All Code to a File', 'add-actions-and-filters');
+        echo '</h3>';
+        echo '<p>';
+        _e('Export all code to a file. Use this to backup your code or transfer it to a different site.', 'add-actions-and-filters');
+        echo '<br/>';
+        _e('To export specific code items, go to the listing table, select those you want, and use the Export bulk action.', 'add-actions-and-filters');
+        echo '</p>';
+        ?>
+        <form action="" method="post">
+            <?php submit_button(__('Export', 'add-actions-and-filters')); ?>
+        </form>
+        <?php
+        // todo
+    }
+
+    public function outputImport()
+    {
+        echo '<h3>';
+        _e('Import Code from Export File', 'add-actions-and-filters');
+        echo '</h3>';
+        echo '<p>';
+        _e('Import code from a file exported from this plugin.', 'add-actions-and-filters');
+        echo '</p>';
+        ?>
+        <form action="" method="post" enctype="multipart/form-data">
+            <input type="file" name="importfile" id="importfile"/>
+            <?php submit_button(__('Import', 'add-actions-and-filters')); ?>
+        </form>
+        <?php
+        // todo
+    }
+
+
+    public function outputPhpShortcodeExecListing()
+    {
+        $scep_names = get_option('scep_names');
+
+        if (!is_array($scep_names)) {
+            return;
+        }
+        if (!count($scep_names) > 0) {
+            return;
+        }
+        ?>
+        <h3><?php _e('Import from Shortcode Exec PHP Plugin', 'add-actions-and-filters'); ?></h3>
+        <p><?php _e('The following shortcodes are found in "Shortcode Exec PHP" plugin:', 'add-actions-and-filters'); ?></p>
+        <form action="" method="post">
+            <input type="hidden" name="action" value="import_scep"/>
+            <?php
+            foreach ($scep_names as $name) {
+                ?>
+                <input type="checkbox" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="true" checked>
+                <label for="<?php echo $name; ?>"><?php echo $name; ?></label><br/>
+                <?php
+            }
+            submit_button(__('Import Selected Shortcodes', 'add-actions-and-filters'), 'primary', 'submit');
+            _e('After import, the shortcodes will be marked as disabled in Shortcode Exec PHP', 'add-actions-and-filters');
+            ?>
+        </form>
+        <?php
+    }
+
 
 }
