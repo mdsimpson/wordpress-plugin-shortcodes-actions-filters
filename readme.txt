@@ -1,58 +1,67 @@
 === Add Actions And Filters ===
 Contributors: msimpson
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SSABNHHPSVWT6
-Tags: add actions and filters,add action,add filter,actions,filters
+Tags: add shortcodes actions and filters,add shortcodes,add action,add filter,shortcodes,actions,filters
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Requires at least: 4.3
-Tested up to: 4.3.1
+Requires at least: 4.4
+Tested up to: 4.4
 Stable tag: 1.3
 
 Add PHP Code to create your own Actions and Filters
 
 == Description ==
 
-Add PHP Code to create your own Actions and Filters.
+Add PHP Code to create your own Shortcodes, Actions and Filters.
+
+Can import your shortcodes from Shortcode Exec PHP plugin which is no longer supported.
 
 Provides a place to add your code that is more convenient than putting it in your theme's functions.php file.
 
-Add your code in the administration area -> <strong>Tools</strong> -> <strong>Add Actions and Filters</strong>
+Add your code in the administration area -> <strong>Tools</strong> -> <strong>Shortcodes, Actions and Filters</strong>
 but this is only available to users with Administrator role.
 
 Why this plugin?
-Existing WordPress documentation suggests adding your own functions and filters in the theme's functions.php file. This is not a good idea because
+Existing WordPress documentation suggests adding your own action and filters in the theme's functions.php file.
+This is not a good idea because
 
 * If you upgrade your theme, this file can be overwritten and
 * if you change your theme then you need to add the same code to that theme as well.
 
 Your code additions should not have to be artificially tied to your theme. This plugin frees you from that constraint.
 
-Credit: inspired by a similar plugin: <a href="http://wordpress.org/extend/plugins/shortcode-exec-php/">Shortcode Exec PHP</a>
-
-Credit: includes <a href="http://www.cdolivet.com/editarea/">Edit area</a>
-
 == Installation ==
-
+From the Dashboard:
+1. Plugins
+1. Add New
+1. Search "Add Shortcodes, Actions And Filters"
+1. Install Now
+1. Activate
+1. Go to Tools -> Shortcodes, Actions And Filters
 
 == Frequently Asked Questions ==
 
-= I get a fatal PHP Error and my site doesn't work. How do I recover? =
-If the code you save causes a fatal PHP error, it can cause your site to stop working.
-In such a case, connect to you database via PHPMyAdmin.
+= What happens when there is a syntax or other fatal error in one of my code items? =
+You will see an error message on the page which is trying to execute the code.
+It will contain a link to edit the problem code item.
 
-1. Run the query: <code>SELECT * FROM wp_options WHERE option_name = 'AddActionsAndFilters_Plugin_code'</code>
-1. Copy the code so that you have it
-1. Delete it from the database: <code>DELETE FROM wp_options WHERE option_name = 'AddActionsAndFilters_Plugin_code'</code>
+Note: code items are not executed on this plugins code listing and editor pages. Therefore you should have a separate
+page open to test the code.
 
 == Screenshots ==
 
-1. Admin page where code is entered
+1. Dashboard page for code listings
+2. Dashboard page for editing a shortcode
+3. Dashboard page for editing a filter
+4. Dashboard page for editing an action
 
 == Changelog ==
 
 = 2.0 =
+* Significant upgrade
+* Re-designed administration panel allow you to separate out your code, and activate/deactivate them individually
 * Now can create shortcodes similar to (the no longer supported) PHP Shortcode Exec plugin
-* Re-designed administration panel allow you to separate out your code, and enable/disable them individually
+* Can import your shortcodes from PHP Shortcode Exec plugin
 
 = 1.3 =
 
@@ -69,3 +78,11 @@ In such a case, connect to you database via PHPMyAdmin.
 = 1.0 =
 
 * Initial Revision
+
+== Upgrade Notice ==
+
+= 2.0 =
+* Significant upgrade
+* Re-designed administration panel allow you to separate out your code, and activate/deactivate code items individually
+* Now can create shortcodes similar to (the no longer supported) PHP Shortcode Exec plugin
+* Can import your shortcodes from PHP Shortcode Exec plugin
