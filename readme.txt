@@ -18,7 +18,7 @@ Can import your shortcodes from Shortcode Exec PHP plugin which is no longer sup
 
 Provides a place to add your code that is more convenient than putting it in your theme's functions.php file.
 
-Add your code in the administration area -> <strong>Tools</strong> -> <strong>Shortcodes, Actions and Filters</strong>
+Add your code in the Dashboard -> <strong>Tools</strong> -> <strong>Shortcodes, Actions and Filters</strong>
 but this is only available to users with Administrator role.
 
 Why this plugin?
@@ -62,6 +62,7 @@ page open to test the code.
 * Re-designed administration panel allow you to separate out your code, and activate/deactivate them individually
 * Now can create shortcodes similar to (the no longer supported) PHP Shortcode Exec plugin
 * Can import your shortcodes from PHP Shortcode Exec plugin
+* Supports multisite
 
 = 1.3 =
 
@@ -82,7 +83,6 @@ page open to test the code.
 == Upgrade Notice ==
 
 = 2.0 =
-* Significant upgrade
-* Re-designed administration panel allow you to separate out your code, and activate/deactivate code items individually
-* Now can create shortcodes similar to (the no longer supported) PHP Shortcode Exec plugin
-* Can import your shortcodes from PHP Shortcode Exec plugin
+
+Significant upgrade: now can create shortcodes and pull in shortcodes from Shortcode Exec PHP.
+Can manage different pieces of code, having them individually activated or not.
