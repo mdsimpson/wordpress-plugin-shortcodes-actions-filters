@@ -59,14 +59,19 @@ class AddActionsAndFilters_Executor
     {
         foreach ($codeItems as $codeItem) {
             if ($codeItem['shortcode']) {
-                $sc = new AddActionsAndFilters_ShortCode($codeItem['name'], $codeItem['code']);
+                $sc = new AddActionsAndFilters_ShortCode($this->plugin, $codeItem);
                 $sc->register_shortcode();
             } else {
-                eval($codeItem['code']); // May raise FATAL error
+                $result = eval($codeItem['code']);
+                if ($result === FALSE) {
+                    $url = $this->plugin->getAdminPageUrl() . "&id={$codeItem['id']}&action=edit";
+                    printf("<p>%s Plugin: Error in code item named <u><a href='%s' target='_blank'>%s</a></u></p>",
+                        $this->plugin->getPluginDisplayName(),
+                        $url,
+                        $codeItem['name']);
+                }
             }
         }
     }
-
-
 
 }

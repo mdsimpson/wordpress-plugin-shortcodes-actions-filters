@@ -22,45 +22,47 @@
 
 class AddActionsAndFilters_ShortCode
 {
-    /**
-     * @var String
-     */
-    var $name;
 
     /**
-     * @var String
+     * @var AddActionsAndFilters_Plugin
      */
-    var $code;
+    var $plugin;
 
     /**
-     * @var String
+     * @var array
      */
-    var $capability;
+    var $codeItem;
 
     /**
      * AddActionsAndFilters_ShortCode constructor.
-     * @param String $name
-     * @param String $code
-     * @param String $capability
+     * @param AddActionsAndFilters_Plugin $plugin
+     * @param array $codeItem
      */
-    public function __construct($name, $code, $capability = null)
+    public function __construct(AddActionsAndFilters_Plugin $plugin, array $codeItem)
     {
-        $this->name = $name;
-        $this->code = $code;
-        $this->capability = $capability;
+        $this->plugin = $plugin;
+        $this->codeItem = $codeItem;
     }
 
     public function register_shortcode() {
-        add_shortcode($this->name, array($this, 'handle_shortcode'));
+        add_shortcode($this->codeItem['name'], array($this, 'handle_shortcode'));
     }
 
     public function handle_shortcode($atts, $content = null)
     {
-        if ($this->capability && !current_user_can($this->capability)) {
-            // if a capability is requried and the user doesn't have it,
+        if ($this->codeItem['capability'] && !current_user_can($this->codeItem['capability'])) {
+            // if a capability is required and the user doesn't have it,
             // then let the short code do nothing.
             return;
         }
-        eval($this->code); // May raise FATAL error
+        $result = eval($this->codeItem['code']);
+        if ($result === FALSE) {
+            $url = $this->plugin->getAdminPageUrl() . "&id={$this->codeItem['id']}&action=edit";
+            printf("<p>%s Plugin: Error in shortcode [<u><a href='%s' target='_blank'>%s</a></u>]</p>",
+                $this->plugin->getPluginDisplayName(),
+                $url,
+                $this->codeItem['name']);
+        }
+
     }
 }
