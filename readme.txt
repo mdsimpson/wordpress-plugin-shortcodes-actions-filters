@@ -54,6 +54,7 @@ page open to test the code.
 2. Dashboard page for editing a shortcode
 3. Dashboard page for editing a filter
 4. Dashboard page for editing an action
+5. Dashboard page for import/export to/from file and import from Shortcode Exec PHP
 
 == Changelog ==
 
