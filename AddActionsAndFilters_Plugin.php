@@ -119,6 +119,21 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         $savedVersion = $this->getVersionSaved();
         if ($this->isVersionLessThan($savedVersion, '2.0')) {
             $this->installDatabaseTables();
+            $code = $this->getOption('code');
+            if ($code) {
+                // Copy code from old version into new table
+                $codeItem = array();
+                $codeItem['shortcode'] = false;
+                $codeItem['inadmin'] = true;
+                $codeItem['name'] = 'Code';
+                $codeItem['description'] = '';
+                $codeItem['enabled'] = true;
+                $codeItem['code'] = $code;
+                require_once('AddActionsAndFilters_DataModel.php');
+                $dataModel = new AddActionsAndFilters_DataModel($this, null);
+                $dataModel->saveItem($codeItem);
+                //$this->deleteOption('code'); // keep it as a backup for now
+            }
         }
 
         // Post-upgrade, set the current version in the options
@@ -135,7 +150,9 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         add_action('admin_menu', array(&$this, 'addSettingsPage'));
         add_action('wp_ajax_addactionsandfilters_save', array(&$this, 'ajaxSave'));
 
-        if (strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false) {
+        if ((strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false) ||
+            (strpos($_SERVER['REQUEST_URI'], 'addactionsandfilters_save') !== false)
+        ) {
             // Don't exec the code on this page so that you can come back to this page
             // and fix fatal errors.
 
