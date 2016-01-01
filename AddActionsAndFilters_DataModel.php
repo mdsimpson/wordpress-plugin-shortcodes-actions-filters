@@ -170,9 +170,9 @@ class AddActionsAndFilters_DataModel
         $data = array(
             'name' => stripslashes($item['name']),
             'description' => stripslashes($item['description']),
-            'enabled' => $item['enabled'] === 'true' ? 1 : 0,
-            'shortcode' => $item['shortcode'] === 'true' ? 1 : 0,
-            'inadmin' => $item['inadmin'] === 'true' ? 1 : 0,
+            'enabled' => $this->convertBooleanValue($item['enabled']),
+            'shortcode' => $this->convertBooleanValue($item['shortcode']),
+            'inadmin' => $this->convertBooleanValue($item['inadmin']),
             'capability' => stripslashes($item['capability']),
             'code' => stripslashes($item['code']),
         );
@@ -180,6 +180,16 @@ class AddActionsAndFilters_DataModel
         $wpdb->insert($table, $data, $format);
         return $wpdb->insert_id;
 
+    }
+
+    protected function convertBooleanValue($value) {
+        if (is_numeric($value)) {
+            return $value;
+        }
+        if (is_bool($value)) {
+            return $value ? 1 : 0;
+        }
+        return  $value === 'true' ? 1 : 0;
     }
 
     protected function updateItem($item)
@@ -192,9 +202,9 @@ class AddActionsAndFilters_DataModel
             stripslashes($item['name']),
             stripslashes($item['description']),
             stripslashes($item['capability']),
-            $item['enabled'] === 'true' ? 1 : 0,
-            $item['shortcode'] === 'true' ? 1 : 0,
-            $item['inadmin'] === 'true' ? 1 : 0,
+            $this->convertBooleanValue($item['enabled']),
+                $this->convertBooleanValue($item['shortcode']),
+                    $this->convertBooleanValue($item['inadmin']),
             stripslashes($item['code']),
             $item['id']);
         $wpdb->query($sql);

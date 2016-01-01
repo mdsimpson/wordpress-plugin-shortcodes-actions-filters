@@ -74,10 +74,10 @@ class AddActionsAndFilters_ViewImportExport
         echo '</p>';
         ?>
         <form action="" method="post">
+            <input type="hidden" name="action" value="exportall"/>
             <?php submit_button(__('Export', 'add-actions-and-filters')); ?>
         </form>
         <?php
-        // todo
     }
 
     public function outputImport()
@@ -90,11 +90,11 @@ class AddActionsAndFilters_ViewImportExport
         echo '</p>';
         ?>
         <form action="" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="importfile"/>
             <input type="file" name="importfile" id="importfile"/>
             <?php submit_button(__('Import', 'add-actions-and-filters')); ?>
         </form>
         <?php
-        // todo
     }
 
 

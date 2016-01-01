@@ -266,9 +266,9 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     public function displayImportExportPage()
     {
         $this->securityCheck();
-        require_once('AddActionsAndFilters_ViewImportExport.php');
-        $view = new AddActionsAndFilters_ViewImportExport($this);
-        $view->display();
+        require_once('AddActionsAndFilters_ImportExportActions.php');
+        $impex = new AddActionsAndFilters_ImportExportActions($this);
+        $impex->handleImpExp();
     }
 
 
