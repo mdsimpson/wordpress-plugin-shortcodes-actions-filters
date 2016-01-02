@@ -123,6 +123,8 @@ class AddActionsAndFilters_ImportExportActions
                 $shortCode['description'] = get_option("scep_description_$key");
                 $shortCode['enabled'] = get_option("scep_enabled_$key");
                 $shortCode['code'] = get_option("scep_phpcode_$key");
+                $shortCode['inadmin'] = 0;
+                $shortCode['capability'] = '';
                 //$buffer = get_option("scep_buffer_$key");
                 //$param = get_option("scep_param_$key");
 
