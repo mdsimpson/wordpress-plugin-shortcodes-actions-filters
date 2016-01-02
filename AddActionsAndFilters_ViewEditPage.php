@@ -259,7 +259,7 @@ add_action( \'publish_post\', \'email_friends\' );';
             $filter_example = 'function prefix_title( $title, $id = null ) {
     return "The title is: $title";
 }
-add_filter( \'the_title\', prefix_title, 10, 2 );';
+add_filter( \'the_title\', \'prefix_title\', 10, 2 );';
             ?>
             <table>
                 <tbody>
