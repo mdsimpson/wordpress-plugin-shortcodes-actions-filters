@@ -44,7 +44,7 @@ class AddActionsAndFilters_Executor
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
         $table = $this->plugin->getTableName();
-        $sql = "select id, shortcode, name, code from $table where enabled = 1";
+        $sql = "select * from $table where enabled = 1";
         if ($is_admin) {
             $sql .= " and inadmin = 1";
         }

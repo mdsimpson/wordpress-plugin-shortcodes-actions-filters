@@ -165,6 +165,11 @@ class AddActionsAndFilters_ViewEditPage
                                    value="true" <?php if (isset($item['inadmin']) && $item['inadmin']) echo 'checked' ?>>
                             <label for="inadmin"><?php _e('Execute also on Dashboard Pages', 'add-actions-and-filters') ?></label>
                         </div>
+                        <div id="sc_info_buffer" style="display: none;">
+                            <input type="checkbox" id="buffer" name="buffer"
+                                   value="true" <?php if (!isset($item['buffer']) || (isset($item['buffer']) && $item['buffer'])) echo 'checked' ?>>
+                            <label for="buffer"><?php _e('Code echos output') ?></label>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -204,6 +209,7 @@ class AddActionsAndFilters_ViewEditPage
                             "description": jQuery('#description').val(),
                             "enabled": jQuery('#activated').is(':checked'),
                             "shortcode": jQuery('#shortcode').is(':checked'),
+                            "buffer": jQuery('#buffer').is(':checked'),
                             "inadmin": jQuery('#inadmin').is(':checked'),
                             "capability": jQuery('#capability').val(),
                             "code": editor.getValue()

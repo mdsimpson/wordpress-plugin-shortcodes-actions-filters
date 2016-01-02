@@ -95,6 +95,10 @@ class AddActionsAndFilters_ImportExportActions
     {
         _e('Imported Code Items: ', 'add-actions-and-filters');
         if (isset($_FILES['importfile']['tmp_name'])) {
+            if (!$_FILES['importfile']['tmp_name']) {
+                _e('No file specified', 'add-actions-and-filters');
+                return;
+            }
             $json = file_get_contents($_FILES['importfile']['tmp_name']);
             $json_array = json_decode($json, true);
             if (is_array($json_array)) {
@@ -122,6 +126,7 @@ class AddActionsAndFilters_ImportExportActions
                 $shortCode['name'] = $key;
                 $shortCode['description'] = get_option("scep_description_$key");
                 $shortCode['enabled'] = get_option("scep_enabled_$key");
+                $shortCode['buffer'] = get_option("scep_buffer_$key");
                 $shortCode['code'] = get_option("scep_phpcode_$key");
                 $shortCode['inadmin'] = 0;
                 $shortCode['capability'] = '';

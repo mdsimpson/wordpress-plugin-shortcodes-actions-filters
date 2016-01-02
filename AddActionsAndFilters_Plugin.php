@@ -77,6 +77,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
             "id mediumint(9) NOT NULL AUTO_INCREMENT, \n" .
             "enabled boolean DEFAULT 0 NOT NULL, \n" .
             "shortcode boolean DEFAULT 0 NOT NULL, \n" .
+            "buffer boolean DEFAULT 1 NOT NULL, \n" .
             "inadmin boolean DEFAULT 0 NOT NULL, \n" .
             "name tinytext DEFAULT '' NOT NULL, \n" .
             "capability tinytext, \n" .

@@ -105,7 +105,7 @@ class AddActionsAndFilters_DataModel
             ($this->config->getPage() - 1) * $numPerPage,
             $numPerPage
         );
-        $sql = "select id, enabled, shortcode, inadmin, name, capability, description from $table";
+        $sql = "select id, enabled, shortcode, name, capability, description from $table";
         if ($search) {
             $param = "%$search%";
             $sql .= $wpdb->prepare(' where name like %s or description like %s', $param, $param);
@@ -166,7 +166,6 @@ class AddActionsAndFilters_DataModel
     {
         if (isset($item['id'])) {
             return $this->updateItem($item);
-
         } else {
             return $this->insertItem($item);
         }
@@ -174,50 +173,103 @@ class AddActionsAndFilters_DataModel
 
     public function insertItem($item)
     {
+        $this->ensureAllIndexesSet($item);
+        $this->conformInputValues($item);
+
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
         $table = $this->plugin->getTableName();
         $data = array(
-            'name' => stripslashes($item['name']),
-            'description' => stripslashes($item['description']),
-            'enabled' => $this->convertBooleanValue($item['enabled']),
-            'shortcode' => $this->convertBooleanValue($item['shortcode']),
-            'inadmin' => $this->convertBooleanValue($item['inadmin']),
-            'capability' => stripslashes($item['capability']),
-            'code' => stripslashes($item['code']),
+            'name' => $item['name'],
+            'description' => $item['description'],
+            'enabled' => $item['enabled'],
+            'shortcode' => $item['shortcode'],
+            'buffer' => $item['buffer'],
+            'inadmin' => $item['inadmin'],
+            'capability' => $item['capability'],
+            'code' => $item['code'],
         );
-        $format = array('%s', '%s', '%d', '%d', '%s', '%s');
+        $format = array('%s', '%s', '%d', '%d', '%d', '%d', '%s', '%s');
         $wpdb->insert($table, $data, $format);
         return $wpdb->insert_id;
-
     }
 
-    protected function convertBooleanValue($value) {
+    public function updateItem($item)
+    {
+        $this->ensureAllIndexesSet($item);
+        $this->conformInputValues($item);
+
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $sql = $wpdb->prepare(
+            "update $table set name = %s, description = %s, capability = %s, enabled = %d, shortcode = %d, buffer = %d, inadmin = %d, code = %s where id = %d",
+            $item['name'],
+            $item['description'],
+            $item['capability'],
+            $item['enabled'],
+            $item['shortcode'],
+            $item['buffer'],
+            $item['inadmin'],
+            $item['code'],
+            $item['id']);
+        $wpdb->query($sql);
+        return $item['id'];
+    }
+
+    protected function ensureAllIndexesSet(&$item)
+    {
+        $defaults = array(
+            'name' => '',
+            'description' => '',
+            'capability' => '',
+            'code' => '',
+            'enabled' => 0,
+            'shortcode' => 0,
+            'buffer' => 1,
+            'inadmin' => 0
+        );
+        foreach ($defaults as $key => $value) {
+            if (!isset($item[$key])) {
+                $item[$key] = $value;
+            }
+        }
+    }
+
+    protected function conformInputValues(&$item)
+    {
+        $strings = array(
+            'name',
+            'description',
+            'capability',
+            'code'
+        );
+        $bools = array(
+            'enabled',
+            'shortcode',
+            'buffer',
+            'inadmin'
+        );
+
+        foreach ($strings as $key) {
+            $item[$key] = stripslashes($item[$key]);
+        }
+        foreach ($bools as $key) {
+            $item[$key] = $this->convertBooleanValue($item[$key]);
+        }
+    }
+
+    protected function convertBooleanValue($value)
+    {
         if (is_numeric($value)) {
             return $value;
         }
         if (is_bool($value)) {
             return $value ? 1 : 0;
         }
-        return  $value === 'true' ? 1 : 0;
+        return strtolower($value) === 'true' ? 1 : 0;
     }
 
-    public function updateItem($item)
-    {
-        global $wpdb;
-        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
-        $table = $this->plugin->getTableName();
-        $sql = $wpdb->prepare(
-            "update $table set name = %s, description = %s, capability = %s, enabled = %d, shortcode = %d, inadmin = %d, code = %s where id = %d",
-            stripslashes($item['name']),
-            stripslashes($item['description']),
-            stripslashes($item['capability']),
-            $this->convertBooleanValue($item['enabled']),
-                $this->convertBooleanValue($item['shortcode']),
-                    $this->convertBooleanValue($item['inadmin']),
-            stripslashes($item['code']),
-            $item['id']);
-        $wpdb->query($sql);
-        return $item['id'];
-    }
+
 }
+
