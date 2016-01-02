@@ -89,17 +89,6 @@ class AddActionsAndFilters_DataModel
     }
 
     /**
-     * @param $ids String|array of ids
-     */
-    public function export($ids)
-    {
-        if (is_array($ids)) {
-            // todo
-        }
-        // todo: replace with DB query
-    }
-
-    /**
      * @param null|false|string $search
      * @return array|null|object
      */
