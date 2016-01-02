@@ -31,7 +31,8 @@ This is not a good idea because:
 Your code additions should not have to be artificially tied to your theme. This plugin frees you from that constraint.
 
 == Installation ==
-From the Dashboard:
+
+1. From the Dashboard:
 1. Plugins
 1. Add New
 1. Search "Add Shortcodes, Actions And Filters"
@@ -52,7 +53,7 @@ In certain cases, an error may cause you to be unable to access any pages your s
 But you will be able to access this plugin's dashboard pages so that you can edit or delete the problem code.
 Enter the URL to the plugin's dashboard page directly into your browser:
 
-http://<YOUR-SITE>/wp-admin/admin.php?page=ShortcodesActionsFilters
+http://YOUR-SITE/wp-admin/admin.php?page=ShortcodesActionsFilters
 
 = What order are the code elements executed in? =
 They are executed in order by ID number, lowest to highest. Shortcode are registered but not executed until the
@@ -74,7 +75,7 @@ the code with ID=1, then active code items that depend on it will fail.
 
 = 2.0 =
 
-Significant upgrade!
+* Significant upgrade!
 * Re-designed administration panel allows you to separate out your code, and activate/deactivate them individually
 * Now can create shortcodes similar to (the no longer supported) PHP Shortcode Exec plugin
 * Can import your shortcodes from PHP Shortcode Exec plugin
