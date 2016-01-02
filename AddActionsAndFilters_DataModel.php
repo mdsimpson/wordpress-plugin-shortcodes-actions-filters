@@ -124,15 +124,6 @@ class AddActionsAndFilters_DataModel
         return $wpdb->get_results($sql, ARRAY_A);
     }
 
-    public function getAllDataItems()
-    {
-        global $wpdb;
-        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
-        $table = $this->plugin->getTableName();
-        $sql = "select * from $table order by id asc";
-        return $wpdb->get_results($sql, ARRAY_A);
-    }
-
     /**
      * @return int
      */
@@ -155,6 +146,26 @@ class AddActionsAndFilters_DataModel
         $table = $this->plugin->getTableName();
         $sql = $wpdb->prepare("select * from $table where id = %d", $id);
         return $wpdb->get_row($sql, ARRAY_A);
+    }
+
+    /**
+     * @param $ids array|null
+     * @return array|null|object
+     */
+    public function getDataItems($ids)
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $sql = "select * from $table ";
+        if (is_array($ids) && !empty($ids)) {
+            $sql .= ' where id in ( %d';
+            $sql .= str_repeat(', %d', count($ids) - 1);
+            $sql .= ' )';
+            $sql = $wpdb->prepare($sql, $ids);
+        }
+        $sql .= ' order by id asc';
+        return $wpdb->get_results($sql, ARRAY_A);
     }
 
     /**

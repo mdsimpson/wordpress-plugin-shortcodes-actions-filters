@@ -90,6 +90,8 @@ class AddActionsAndFilters_AdminPageController
                 }
             } else if (isset($_REQUEST['id'])) {
                 $ids = array($_REQUEST['id']);
+            } else if (isset($_REQUEST['ids'])) {
+                $ids = explode(',', $_REQUEST['ids']);
             }
 
             // Perform Actions
@@ -111,8 +113,11 @@ class AddActionsAndFilters_AdminPageController
                         $dataModel->delete($ids);
                         break;
                     case $actions->getExportKey();
-                        // todo: probably need a different mechanism
-                        $dataModel->export($ids);
+                        if (!empty($ids)) {
+                            require_once('AddActionsAndFilters_ViewImportExport.php');
+                            $view = new AddActionsAndFilters_ViewImportExport($this->plugin);
+                            $view->outputBulkExport($ids);
+                        }
                         break;
                     default:
                         break;

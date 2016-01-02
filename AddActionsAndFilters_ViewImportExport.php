@@ -85,6 +85,21 @@ class AddActionsAndFilters_ViewImportExport
         <?php
     }
 
+    public function outputBulkExport($ids)
+    {
+        print_r($ids); // todo debug
+        ?>
+        <script>
+            jQuery(document).ready(function () {
+                window.location = "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_export&ids=<?php
+                    echo implode(',', $ids);
+                    ?>";
+            });
+        </script>
+
+        <?php
+    }
+
     public function outputImport()
     {
         echo '<h3>';

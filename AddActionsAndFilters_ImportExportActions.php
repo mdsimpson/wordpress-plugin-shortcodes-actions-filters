@@ -75,8 +75,16 @@ class AddActionsAndFilters_ImportExportActions
             }
             require_once('AddActionsAndFilters_DataModel.php');
             $dataModel = new AddActionsAndFilters_DataModel($this->plugin, null);
-            $allItems = $dataModel->getAllDataItems();
-            echo json_encode($allItems);
+            $ids = null;
+            if (isset($_REQUEST['ids'])) {
+               $ids = explode(',', $_REQUEST['ids']);
+            }
+            $codeItems = $dataModel->getDataItems($ids);
+            if (defined('JSON_PRETTY_PRINT')) {
+                echo json_encode($codeItems, JSON_PRETTY_PRINT);
+            } else {
+                echo json_encode($codeItems);
+            }
             die();
         } else {
             die(-1);
