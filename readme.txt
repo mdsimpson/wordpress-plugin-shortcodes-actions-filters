@@ -14,7 +14,7 @@ Add PHP Code to create your own Actions and Filters
 
 Add PHP Code to create your own Shortcodes, Actions and Filters.
 
-Can import your shortcodes from Shortcode Exec PHP plugin which is no longer supported.
+Can import your shortcodes from Shortcode Exec PHP plugin (which is no longer supported).
 
 Provides a place to add your code that is more convenient than putting it in your theme's functions.php file.
 
@@ -22,8 +22,8 @@ Add your code in the Dashboard -> <strong>Tools</strong> -> <strong>Shortcodes, 
 but this is only available to users with Administrator role.
 
 Why this plugin?
-Existing WordPress documentation suggests adding your own action and filters in the theme's functions.php file.
-This is not a good idea because
+Existing WordPress documentation suggests adding your own shortcodes, action and filters in the theme's functions.php file.
+This is not a good idea because:
 
 * If you upgrade your theme, this file can be overwritten and
 * if you change your theme then you need to add the same code to that theme as well.
@@ -42,13 +42,13 @@ From the Dashboard:
 == Frequently Asked Questions ==
 
 = What happens when there is a syntax or other fatal error in one of my code items? =
-Typically, you will see an error message on the page which is trying to execute the code.
-It will contain a link to edit the problem code item.
+Typically you will see an error message on the page that is trying to execute the code.
+The error will contain a link to edit the problem code item.
 
-You will not see any errors on this plugin's pages for editing and listing the code. Therefore, you should
+You will not see any errors on this plugin's dashboard pages for editing and listing the code. Therefore, you should
 open a different page on your site where you can see the results (or errors) of your code execution.
 
-In rare cases, an error may cause you to be unable to access any pages your site, including dashboard pages.
+In certain cases, an error may cause you to be unable to access any pages your site, including dashboard pages.
 But you will be able to access this plugin's dashboard pages so that you can edit or delete the problem code.
 Enter the URL to the plugin's dashboard page directly into your browser:
 
@@ -73,8 +73,9 @@ the code with ID=1, then active code items that depend on it will fail.
 == Changelog ==
 
 = 2.0 =
-* Significant upgrade
-* Re-designed administration panel allow you to separate out your code, and activate/deactivate them individually
+
+Significant upgrade!
+* Re-designed administration panel allows you to separate out your code, and activate/deactivate them individually
 * Now can create shortcodes similar to (the no longer supported) PHP Shortcode Exec plugin
 * Can import your shortcodes from PHP Shortcode Exec plugin
 * Supports multisite
@@ -99,5 +100,5 @@ the code with ID=1, then active code items that depend on it will fail.
 
 = 2.0 =
 
-Significant upgrade: now can create shortcodes and pull in shortcodes from Shortcode Exec PHP.
+Significant upgrade: now can create shortcodes and import shortcodes from Shortcode Exec PHP.
 Can manage different pieces of code, having them individually activated or not.
