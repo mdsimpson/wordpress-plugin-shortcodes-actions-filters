@@ -1,102 +1,225 @@
-# Copyright (C) 2013 Add Actions And Filters
-# This file is distributed under the same license as the Add Actions And Filters package.
+# Copyright (C) 2016 Add Shortcodes, Actions And Filters
+# This file is distributed under the same license as the Add Shortcodes, Actions And Filters package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Add Actions And Filters 0.1\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/add-actions-and-filters\n"
-"POT-Creation-Date: 2013-05-06 22:26:25+00:00\n"
+"Project-Id-Version: Add Shortcodes, Actions And Filters 2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/add-actions-and-"
+"filters\n"
+"POT-Creation-Date: 2016-01-02 03:43:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: AddActionsAndFilters_OptionsManager.php:266
-msgid "You do not have sufficient permissions to access this page."
+#: AddActionsAndFilters_AdminPageActions.php:41
+msgid "Activate"
 msgstr ""
 
-#: AddActionsAndFilters_OptionsManager.php:284
-msgid "System Settings"
+#: AddActionsAndFilters_AdminPageActions.php:64
+msgid "Deactivate"
 msgstr ""
 
-#: AddActionsAndFilters_OptionsManager.php:286
-msgid "System"
+#: AddActionsAndFilters_AdminPageActions.php:87
+msgid "Edit"
+msgstr ""
+
+#: AddActionsAndFilters_AdminPageActions.php:110
+msgid "Delete"
+msgstr ""
+
+#: AddActionsAndFilters_AdminPageActions.php:133
+#: AddActionsAndFilters_ViewImportExport.php:76
+msgid "Export"
+msgstr ""
+
+#: AddActionsAndFilters_CodeListTable.php:61
+msgid "ID"
+msgstr ""
+
+#: AddActionsAndFilters_CodeListTable.php:62
+msgid "Active"
+msgstr ""
+
+#: AddActionsAndFilters_CodeListTable.php:63
+msgid "SC"
+msgstr ""
+
+#: AddActionsAndFilters_CodeListTable.php:64
+#: AddActionsAndFilters_ViewEditPage.php:110
+msgid "Name"
+msgstr ""
+
+#: AddActionsAndFilters_CodeListTable.php:65
+#: AddActionsAndFilters_ViewEditPage.php:136
+msgid "Execute only for"
+msgstr ""
+
+#: AddActionsAndFilters_CodeListTable.php:66
+#: AddActionsAndFilters_ViewEditPage.php:118
+msgid "Description"
+msgstr ""
+
+#: AddActionsAndFilters_ImportExportActions.php:96
+msgid "Imported Code Items: "
+msgstr ""
+
+#: AddActionsAndFilters_ImportExportActions.php:131
+msgid "Imported"
+msgstr ""
+
+#: AddActionsAndFilters_OptionsManager.php:285
+msgid "true"
 msgstr ""
 
 #: AddActionsAndFilters_OptionsManager.php:287
-msgid "PHP Version"
+msgid "false"
+msgstr ""
+
+#: AddActionsAndFilters_OptionsManager.php:290
+msgid "Administrator"
 msgstr ""
 
 #: AddActionsAndFilters_OptionsManager.php:292
+msgid "Editor"
+msgstr ""
+
+#: AddActionsAndFilters_OptionsManager.php:294
+msgid "Author"
+msgstr ""
+
+#: AddActionsAndFilters_OptionsManager.php:296
+msgid "Contributor"
+msgstr ""
+
+#: AddActionsAndFilters_OptionsManager.php:298
+msgid "Subscriber"
+msgstr ""
+
+#: AddActionsAndFilters_OptionsManager.php:300
+msgid "Anyone"
+msgstr ""
+
+#: AddActionsAndFilters_Plugin.php:37
+msgid "Delete all added code and settings for this plugin's when uninstalling"
+msgstr ""
+
+#: AddActionsAndFilters_Plugin.php:43
+msgid "Shortcodes, Actions and Filters"
+msgstr ""
+
+#: AddActionsAndFilters_Plugin.php:264
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: AddActionsAndFilters_ViewAdminPage.php:79
+msgid "Help"
+msgstr ""
+
+#: AddActionsAndFilters_ViewAdminPage.php:121
+msgid "Add New"
+msgstr ""
+
+#: AddActionsAndFilters_ViewEditPage.php:83
+msgid "Code Editor"
+msgstr ""
+
+#: AddActionsAndFilters_ViewEditPage.php:129
+msgid "Activated"
+msgstr ""
+
+#: AddActionsAndFilters_ViewEditPage.php:133
+msgid "Shortcode"
+msgstr ""
+
+#: AddActionsAndFilters_ViewEditPage.php:166
+msgid "Execute also on Dashboard Pages"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:51
+msgid "Import / Export"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:68
+msgid "Export All Code to a File"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:71
+msgid ""
+"Export all code to a file. Use this to backup your code or transfer it to a "
+"different site."
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:73
+msgid ""
+"To export specific code items, go to the listing table, select those you "
+"want, and use the Export bulk action."
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:105
+msgid "Import Code from Export File"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:108
+msgid "Import code from a file exported from this plugin."
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:114
+msgid "Import"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:131
+msgid "Import from Shortcode Exec PHP Plugin"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:132
+msgid "The following shortcodes are found in \"Shortcode Exec PHP\" plugin:"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:142
+msgid "Import Selected Shortcodes"
+msgstr ""
+
+#: AddActionsAndFilters_ViewImportExport.php:143
+msgid ""
+"After import, the shortcodes will be marked as disabled in Shortcode Exec PHP"
+msgstr ""
+
+#: AddActionsAndFilters_ViewSettingsPage.php:79
+msgid "System Settings"
+msgstr ""
+
+#: AddActionsAndFilters_ViewSettingsPage.php:93
+msgid "System"
+msgstr ""
+
+#: AddActionsAndFilters_ViewSettingsPage.php:97
+msgid "PHP Version"
+msgstr ""
+
+#: AddActionsAndFilters_ViewSettingsPage.php:102
 msgid ""
 "(WARNING: This plugin may not work properly with versions earlier than PHP "
 "5.2)"
 msgstr ""
 
-#: AddActionsAndFilters_OptionsManager.php:298
+#: AddActionsAndFilters_ViewSettingsPage.php:109
 msgid "MySQL Version"
 msgstr ""
 
-#: AddActionsAndFilters_OptionsManager.php:303
+#: AddActionsAndFilters_ViewSettingsPage.php:114
 msgid ""
 "(WARNING: This plugin may not work properly with versions earlier than MySQL "
 "5.0)"
 msgstr ""
 
-#: AddActionsAndFilters_OptionsManager.php:311
+#: AddActionsAndFilters_ViewSettingsPage.php:125
 msgid "Settings"
 msgstr ""
 
-#: AddActionsAndFilters_OptionsManager.php:334
-msgid "Save Changes"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:392
-msgid "true"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:394
-msgid "false"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:397
-msgid "Administrator"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:399
-msgid "Editor"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:401
-msgid "Author"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:403
-msgid "Contributor"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:405
-msgid "Subscriber"
-msgstr ""
-
-#: AddActionsAndFilters_OptionsManager.php:407
-msgid "Anyone"
-msgstr ""
-
-#: AddActionsAndFilters_Plugin.php:159
-msgid ""
-"Put PHP code here to define functions and add them as <a target=\"_addactions"
-"\" href=\"http://codex.wordpress.org/Function_Reference/add_action"
-"\">actions</a> or <a target=\"_addfilter\" href=\"http://codex.wordpress.org/"
-"Function_Reference/add_filter\">filters</a>. Also add <a target=\"_scripts\" "
-"href=\"http://codex.wordpress.org/Function_Reference/wp_enqueue_script"
-"\">scripts</a> and <a target=\"_styles\" href=\"http://codex.wordpress.org/"
-"Function_Reference/wp_enqueue_style\">styles</a>."
-msgstr ""
-
-#: AddActionsAndFilters_Plugin.php:211
-msgid "Saved"
+#: AddActionsAndFilters_ViewSettingsPage.php:151
+msgid "Save Settings"
 msgstr ""
 
 #: add-actions-and-filters.php:42
@@ -114,7 +237,7 @@ msgid "Your server's PHP version: "
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "Add Actions And Filters"
+msgid "Add Shortcodes, Actions And Filters"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -122,7 +245,12 @@ msgid "http://wordpress.org/extend/plugins/add-actions-and-filters/"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Add PHP Code to create your own Actions and Filters"
+msgid ""
+"Add PHP Code to create and manage your own Shortcodes, Actions and Filters. "
+"<strong><a href=\"admin.php?page=ShortcodesActionsFilters\">Add Code</a></"
+"strong> | <a href=\"admin.php?page=ShortcodesActionsFiltersSettings"
+"\">Settings</a> | <a href=\"admin.php?page=ShortcodesActionsFiltersImpExp"
+"\">Import/Export</a>"
 msgstr ""
 
 #. Author of the plugin/theme
