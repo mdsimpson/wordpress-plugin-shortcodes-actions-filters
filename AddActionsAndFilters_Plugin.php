@@ -149,9 +149,10 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         add_action('admin_menu', array(&$this, 'addToolsAdminPage'));
         add_action('admin_menu', array(&$this, 'addSettingsPage'));
         add_action('wp_ajax_addactionsandfilters_save', array(&$this, 'ajaxSave'));
+        add_action('wp_ajax_addactionsandfilters_export', array(&$this, 'ajaxExport'));
 
         if ((strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false) ||
-            (strpos($_SERVER['REQUEST_URI'], 'addactionsandfilters_save') !== false)
+            (strpos($_SERVER['REQUEST_URI'], 'addactionsandfilters_') !== false)
         ) {
             // Don't exec the code on this page so that you can come back to this page
             // and fix fatal errors.
@@ -297,6 +298,16 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         require_once('AddActionsAndFilters_AdminPageController.php');
         $controller = new AddActionsAndFilters_AdminPageController($this);
         $controller->ajaxSave();
+    }
+
+    /**
+     * Ajax export function
+     */
+    public function ajaxExport()
+    {
+        require_once('AddActionsAndFilters_ImportExportActions.php');
+        $impex = new AddActionsAndFilters_ImportExportActions($this);
+        $impex->ajaxExport();
     }
 
     /**

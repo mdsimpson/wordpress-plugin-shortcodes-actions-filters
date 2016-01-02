@@ -73,10 +73,15 @@ class AddActionsAndFilters_ViewImportExport
         _e('To export specific code items, go to the listing table, select those you want, and use the Export bulk action.', 'add-actions-and-filters');
         echo '</p>';
         ?>
-        <form action="" method="post">
-            <input type="hidden" name="action" value="exportall"/>
-            <?php submit_button(__('Export', 'add-actions-and-filters')); ?>
-        </form>
+        <?php submit_button(__('Export', 'add-actions-and-filters'), 'primary', 'exportcode'); ?>
+
+        <script>
+            jQuery(document).ready(function () {
+                jQuery('#exportcode').click(function () {
+                    window.location = "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_export";
+                });
+            });
+        </script>
         <?php
     }
 

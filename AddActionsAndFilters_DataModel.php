@@ -124,6 +124,15 @@ class AddActionsAndFilters_DataModel
         return $wpdb->get_results($sql, ARRAY_A);
     }
 
+    public function getAllDataItems()
+    {
+        global $wpdb;
+        $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
+        $table = $this->plugin->getTableName();
+        $sql = "select * from $table order by id asc";
+        return $wpdb->get_results($sql, ARRAY_A);
+    }
+
     /**
      * @return int
      */

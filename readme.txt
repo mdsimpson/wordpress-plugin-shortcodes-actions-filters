@@ -42,11 +42,17 @@ From the Dashboard:
 == Frequently Asked Questions ==
 
 = What happens when there is a syntax or other fatal error in one of my code items? =
-You will see an error message on the page which is trying to execute the code.
+Typically, you will see an error message on the page which is trying to execute the code.
 It will contain a link to edit the problem code item.
 
-Note: code items are not executed on this plugins code listing and editor pages. Therefore you should have a separate
-page open to test the code.
+You will not see any errors on this plugin's pages for editing and listing the code. Therefore, you should
+open a different page on your site where you can see the results (or errors) of your code execution.
+
+In rare cases, an error may cause you to be unable to access any pages your site, including dashboard pages.
+But you will be able to access this plugin's dashboard pages so that you can edit or delete the problem code.
+Enter the URL to the plugin's dashboard page directly into your browser:
+
+http://<YOUR-SITE>/wp-admin/admin.php?page=ShortcodesActionsFilters
 
 == Screenshots ==
 

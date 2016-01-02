@@ -48,11 +48,6 @@ class AddActionsAndFilters_ImportExportActions
                     $this->importScepShortCodes();
                     break;
 
-                case 'exportall':
-                    $view->outputHeader();
-                    $this->exportToFile(null);
-                    break;
-
                 case 'importfile':
                     $view->outputHeader();
                     $this->importFromFile(null);
@@ -67,12 +62,27 @@ class AddActionsAndFilters_ImportExportActions
 
     }
 
-    public function exportToFile($file_name)
+    public function ajaxExport()
     {
-        // todo
-        echo 'Not yet implemented';
-        print_r($_REQUEST);
+        if (current_user_can('manage_options')) {
+            if (!headers_sent()) {
+                // Don't let IE cache this request
+                header('Pragma: no-cache');
+                header('Cache-Control: no-cache, must-revalidate');
+                header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
+                header('Content-type: application/json');
+                header('Content-Disposition: attachment; filename="shortcode_actions_filters.json"');
+            }
+            require_once('AddActionsAndFilters_DataModel.php');
+            $dataModel = new AddActionsAndFilters_DataModel($this->plugin, null);
+            $allItems = $dataModel->getAllDataItems();
+            echo json_encode($allItems);
+            die();
+        } else {
+            die(-1);
+        }
     }
+
 
     public function importFromFile($file_name)
     {
@@ -89,15 +99,15 @@ class AddActionsAndFilters_ImportExportActions
                 $shortCode = array();
                 $shortCode['shortcode'] = true;
                 $shortCode['name'] = $key;
-                $shortCode['description'] =  get_option("scep_description_$key");
-                $shortCode['enabled'] =  get_option("scep_enabled_$key");
-                $shortCode['code'] =  get_option("scep_phpcode_$key");
+                $shortCode['description'] = get_option("scep_description_$key");
+                $shortCode['enabled'] = get_option("scep_enabled_$key");
+                $shortCode['code'] = get_option("scep_phpcode_$key");
                 //$buffer = get_option("scep_buffer_$key");
                 //$param = get_option("scep_param_$key");
 
                 $id = $dataModel->saveItem($shortCode);
                 $url = $this->plugin->getAdminPageUrl() . "&id=$id&action=edit";
-                echo __('Imported', 'add-actions-and-filters') .  " <a target='_blank' href='$url'>$key</a></br>";
+                echo __('Imported', 'add-actions-and-filters') . " <a target='_blank' href='$url'>$key</a></br>";
 
                 // Deactivate SCEP shortcode
                 update_option("scep_enabled_$key", 0);
