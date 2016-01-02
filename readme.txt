@@ -1,4 +1,4 @@
-=== Add Actions And Filters ===
+=== Add Shortcodes Actions And Filters ===
 Contributors: msimpson
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SSABNHHPSVWT6
 Tags: add shortcodes actions and filters,add shortcodes,add action,add filter,shortcodes,actions,filters

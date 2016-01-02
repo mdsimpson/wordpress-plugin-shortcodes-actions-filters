@@ -1,6 +1,6 @@
 <?php
 /*
-   Plugin Name: Add Shortcodes, Actions And Filters
+   Plugin Name: Add Shortcodes Actions And Filters
    Plugin URI: http://wordpress.org/extend/plugins/add-actions-and-filters/
    Version: 2.0
    Author: Michael Simpson
