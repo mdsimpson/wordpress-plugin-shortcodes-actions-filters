@@ -99,10 +99,11 @@ class AddActionsAndFilters_DataModel
         $table = $this->plugin->getTableName();
         $orderby = $this->config->getOrderby();
         $asc = $this->config->isAsc() ? 'asc' : 'desc';
+        $numPerPage = $this->config->getNumberPerPage();
         $limit = sprintf(
             '%d,%d',
-            $this->config->getPage() - 1,
-            $this->config->getNumberPerPage()
+            ($this->config->getPage() - 1) * $numPerPage,
+            $numPerPage
         );
         $sql = "select id, enabled, shortcode, inadmin, name, capability, description from $table";
         if ($search) {
