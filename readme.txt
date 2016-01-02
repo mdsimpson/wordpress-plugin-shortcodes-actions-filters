@@ -54,6 +54,14 @@ Enter the URL to the plugin's dashboard page directly into your browser:
 
 http://<YOUR-SITE>/wp-admin/admin.php?page=ShortcodesActionsFilters
 
+= What order are the code elements executed in? =
+They are executed in order by ID number, lowest to highest. Shortcode are registered but not executed until the
+shortcode appears on a page.
+
+Action and filter code can depend on code from a code item with a lower ID number. For example, if code item with
+ID=1 defines a function, then all code items with ID>1 have the function defined. But if you deactivate
+the code with ID=1, then active code items that depend on it will fail.
+
 == Screenshots ==
 
 1. Dashboard page for code listings
