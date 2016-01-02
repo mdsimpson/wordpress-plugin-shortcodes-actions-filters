@@ -8,7 +8,7 @@ Requires at least: 4.4
 Tested up to: 4.4
 Stable tag: 2.0
 
-Add PHP Code to create your own Actions and Filters
+Add PHP Code to create your own Shortcodes, Actions and Filters
 
 == Description ==
 
