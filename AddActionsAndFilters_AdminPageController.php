@@ -144,10 +144,10 @@ class AddActionsAndFilters_AdminPageController
         if (current_user_can('manage_options')) {
             if (!headers_sent()) {
                 // Don't let IE cache this request
-                header("Pragma: no-cache");
-                header("Cache-Control: no-cache, must-revalidate");
-                header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
-                header("Content-type: text/plain");
+                header('Pragma: no-cache');
+                header('Cache-Control: no-cache, must-revalidate');
+                header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
+                header('Content-type: text/plain');
             }
 
             require_once('AddActionsAndFilters_DataModelConfig.php');
