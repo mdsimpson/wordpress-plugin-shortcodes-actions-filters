@@ -50,7 +50,9 @@ class AddActionsAndFilters_ShortCode
 
     public function handle_shortcode($atts, $content = null)
     {
-        if ($this->codeItem['capability'] && !current_user_can($this->codeItem['capability'])) {
+        if (isset($this->codeItem['capability']) &&
+            $this->codeItem['capability'] &&
+            !current_user_can($this->codeItem['capability'])) {
             // if a capability is required and the user doesn't have it,
             // then let the short code do nothing.
             return;
