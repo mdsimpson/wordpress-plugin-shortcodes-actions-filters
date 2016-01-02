@@ -50,7 +50,7 @@ class AddActionsAndFilters_ImportExportActions
 
                 case 'importfile':
                     $view->outputHeader();
-                    $this->importFromFile(null);
+                    $this->importFromFile();
                     break;
 
                 default:
@@ -73,11 +73,10 @@ class AddActionsAndFilters_ImportExportActions
                 header('Content-type: application/json');
                 header('Content-Disposition: attachment; filename="shortcode_actions_filters.json"');
             }
-            require_once('AddActionsAndFilters_DataModel.php');
             $dataModel = new AddActionsAndFilters_DataModel($this->plugin, null);
             $ids = null;
             if (isset($_REQUEST['ids'])) {
-               $ids = explode(',', $_REQUEST['ids']);
+                $ids = explode(',', $_REQUEST['ids']);
             }
             $codeItems = $dataModel->getDataItems($ids);
             if (defined('JSON_PRETTY_PRINT')) {
@@ -92,11 +91,25 @@ class AddActionsAndFilters_ImportExportActions
     }
 
 
-    public function importFromFile($file_name)
+    public function importFromFile()
     {
-        // todo
-        echo 'Not yet implemented';
-        print_r($_REQUEST);
+        _e('Imported Code Items: ', 'add-actions-and-filters');
+        if (isset($_FILES['importfile']['tmp_name'])) {
+            $json = file_get_contents($_FILES['importfile']['tmp_name']);
+            $json_array = json_decode($json, true);
+            if (is_array($json_array)) {
+                $dataModel = new AddActionsAndFilters_DataModel($this->plugin, null);
+                $url_base = $this->plugin->getAdminPageUrl(); // . ;
+
+                foreach ($json_array as $item) {
+                    // Don't overwrite existing code items; insert new ones
+                    $id = $dataModel->insertItem($item);
+                    printf('<br/><a target="_blank" href="%s">%s</a>',
+                        "$url_base&id=$id&action=edit",
+                        $item['name']);
+                }
+            }
+        }
     }
 
     public function importScepShortCodes()

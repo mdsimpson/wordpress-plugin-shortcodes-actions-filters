@@ -295,6 +295,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     public function ajaxSave()
     {
+        $this->securityCheck();
         require_once('AddActionsAndFilters_AdminPageController.php');
         $controller = new AddActionsAndFilters_AdminPageController($this);
         $controller->ajaxSave();
@@ -305,6 +306,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     public function ajaxExport()
     {
+        $this->securityCheck();
         require_once('AddActionsAndFilters_ImportExportActions.php');
         $impex = new AddActionsAndFilters_ImportExportActions($this);
         $impex->ajaxExport();

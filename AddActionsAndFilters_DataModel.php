@@ -171,7 +171,7 @@ class AddActionsAndFilters_DataModel
         }
     }
 
-    protected function insertItem($item)
+    public function insertItem($item)
     {
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
@@ -201,7 +201,7 @@ class AddActionsAndFilters_DataModel
         return  $value === 'true' ? 1 : 0;
     }
 
-    protected function updateItem($item)
+    public function updateItem($item)
     {
         global $wpdb;
         $this->plugin->ensureDatabaseTableInstalled(); // ensure created in multisite
