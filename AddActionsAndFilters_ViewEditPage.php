@@ -111,7 +111,7 @@ class AddActionsAndFilters_ViewEditPage
                     </td>
                     <td valign="top" nowrap>
                         <span id="sc_info_open" style="display: none;">[</span>
-                        <input id="name" type="text" value="<?php echo $item['name'] ?>" size="25"/>
+                        <input id="name" type="text" value="<?php echo isset($item['name']) ?  $item['name'] : '' ?>" size="25"/>
                         <span id="sc_info_close" style="display: none;">]</span>
                     </td>
                     <td valign="top">
@@ -119,17 +119,17 @@ class AddActionsAndFilters_ViewEditPage
                     </td>
                     <td valign="top">
                         <textarea title="description" id="description"
-                                  cols="80"><?php echo $item['description'] ?></textarea>
+                                  cols="80"><?php echo isset($item['description']) ?  $item['description'] : '' ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" colspan="2">
                         <input type="checkbox" id="activated" name="activated"
-                               value="true" <?php if ($item['enabled']) echo 'checked' ?>>
+                               value="true" <?php if (isset($item['enabled']) && $item['enabled']) echo 'checked' ?>>
                         <label for="enabled"><?php _e('Activated') ?></label>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="checkbox" id="shortcode" name="shortcode"
-                               value="true" <?php if ($item['shortcode']) echo 'checked' ?>>
+                               value="true" <?php if (isset($item['shortcode']) && $item['shortcode']) echo 'checked' ?>>
                         <label for="shortcode"><?php _e('Shortcode') ?></label>
                     </td>
                     <td valign="top">
@@ -143,13 +143,13 @@ class AddActionsAndFilters_ViewEditPage
                             foreach ($this->getCapabilityToRolesList() as $cap => $roles) {
                                 $roles = implode(', ', $roles);
                                 $selected = '';
-                                if ($cap == $item['capability']) {
+                                if (isset($item['capability']) && $cap == $item['capability']) {
                                     $selected = 'selected';
                                     $cap_found = true;
                                 }
                                 echo "<option value=\"$cap\" $selected>$cap ($roles)</option>";
                             }
-                            if (!$cap_found) {
+                            if (isset($item['capability']) && !$cap_found) {
                                 echo "<option value=\"{$item['capability']}\" selected>{$item['capability']}</option>";
                             }
                             ?>
@@ -162,7 +162,7 @@ class AddActionsAndFilters_ViewEditPage
                     <td>
                         <div id="af_info_inadmin" style="display: none;">
                             <input type="checkbox" id="inadmin" name="inadmin"
-                                   value="true" <?php if ($item['inadmin']) echo 'checked' ?>>
+                                   value="true" <?php if (isset($item['inadmin']) && $item['inadmin']) echo 'checked' ?>>
                             <label for="inadmin"><?php _e('Execute also on Dashboard Pages', 'add-actions-and-filters') ?></label>
                         </div>
                     </td>
@@ -174,7 +174,7 @@ class AddActionsAndFilters_ViewEditPage
             <div id="sc_info_instructions_open" style="display: none;">
                 <code>function handle_shortcode ( $atts, $content = null ) {</code><br/>
             </div>
-            <textarea title="code" id="code"><?php echo $item['code'] ?></textarea>
+            <textarea title="code" id="code"><?php echo isset($item['code']) ? $item['code'] : '' ?></textarea>
             <div id="sc_info_instructions_close" style="display: none;">
                 <code>}</code>
             </div>
