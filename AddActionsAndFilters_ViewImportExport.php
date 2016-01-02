@@ -87,7 +87,6 @@ class AddActionsAndFilters_ViewImportExport
 
     public function outputBulkExport($ids)
     {
-        print_r($ids); // todo debug
         ?>
         <script>
             jQuery(document).ready(function () {
