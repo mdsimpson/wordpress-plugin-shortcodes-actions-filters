@@ -55,6 +55,16 @@ Enter the URL to the plugin's dashboard page directly into your browser:
 
 http://YOUR-SITE/wp-admin/admin.php?page=ShortcodesActionsFilters
 
+Worst-case scenario: if the code interferes with being able to login and get to the dashboard, then you will
+need to go to the database.
+
+Find the wp_addactionsandfilters_plugin_usercode table. If you know the code item that is causing the problem, then set
+its "enabled" value to 0.
+
+Alternately, disable all code using the following query:
+<code>UPDATE wp_addactionsandfilters_plugin_usercode SET enabled = 0</code>
+
+
 = What order are the code elements executed in? =
 They are executed in order by ID number, lowest to highest. Shortcode are registered but not executed until the
 shortcode appears on a page.
