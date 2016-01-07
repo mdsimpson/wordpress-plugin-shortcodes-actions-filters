@@ -152,10 +152,12 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         add_action('wp_ajax_addactionsandfilters_save', array(&$this, 'ajaxSave'));
         add_action('wp_ajax_addactionsandfilters_export', array(&$this, 'ajaxExport'));
 
-        if ((strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false) ||
-            (strpos($_SERVER['REQUEST_URI'], 'addactionsandfilters_') !== false)
-        ) {
-            // Don't exec the code on this page so that you can come back to this page
+        $isPluginAdminPage = (strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false);
+        $isPluginAjaxPage = strpos($_SERVER['REQUEST_URI'], 'addactionsandfilters_') !== false;
+        $isLoginPage = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
+
+        if ($isPluginAdminPage || $isPluginAjaxPage || $isLoginPage) {
+            // Don't exec the code on these pages so that you can come back to the plugin dashboard page
             // and fix fatal errors.
 
             //add_action('admin_enqueue_scripts', array(&$this, 'enqueueAdminPageStylesAndScripts'));

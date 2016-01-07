@@ -83,6 +83,10 @@ the code with ID=1, then active code items that depend on it will fail.
 
 == Changelog ==
 
+= 2.0.1 =
+
+* Fix for scenario where bad code is executing on admin pages that could cause the user to be unable to login to fix it.
+
 = 2.0 =
 
 * Significant upgrade!
