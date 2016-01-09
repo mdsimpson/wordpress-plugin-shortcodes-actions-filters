@@ -34,6 +34,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         //  http://plugin.michael-simpson.com/?page_id=31
         return array(
             //'_version' => array('Installed Version'), // For testing upgrades
+            'AllowExecOnLoginPage' => array(__('Allow Execution of Actions and Filters on Login/Logout pages <br/><span style="background-color: yellow">WARNING: if your code has errors then it can cause you to be unable to login to your site to fix the code!</span>', 'add-actions-and-filters'), 'false', 'true'),
             'DropOnUninstall' => array(__('Delete all added code and settings for this plugin\'s when uninstalling', 'add-actions-and-filters'), 'false', 'true')
         );
     }
@@ -118,22 +119,31 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
         $upgradeOk = true;
         $savedVersion = $this->getVersionSaved();
-        if ($this->isVersionLessThan($savedVersion, '2.0')) {
-            $this->installDatabaseTables();
-            $code = $this->getOption('code');
-            if ($code) {
-                // Copy code from old version into new table
-                $codeItem = array();
-                $codeItem['shortcode'] = false;
-                $codeItem['inadmin'] = true;
-                $codeItem['name'] = 'Code';
-                $codeItem['description'] = '';
-                $codeItem['enabled'] = true;
-                $codeItem['code'] = $code;
-                require_once('AddActionsAndFilters_DataModel.php');
-                $dataModel = new AddActionsAndFilters_DataModel($this, null);
-                $dataModel->saveItem($codeItem);
-                //$this->deleteOption('code'); // keep it as a backup for now
+        if ($this->isVersionLessThan($savedVersion, '2.0.2')) {
+            
+            // Make these options cached by WP
+            $value = $this->getOption('AllowExecOnLoginPage', 'false');
+            $this->addOption('AllowExecOnLoginPage', $value);
+            $value = $this->getOption('DropOnUninstall', 'false');
+            $this->addOption('DropOnUninstall', $value);
+            
+            if ($this->isVersionLessThan($savedVersion, '2.0')) {
+                $this->installDatabaseTables();
+                $code = $this->getOption('code');
+                if ($code) {
+                    // Copy code from old version into new table
+                    $codeItem = array();
+                    $codeItem['shortcode'] = false;
+                    $codeItem['inadmin'] = true;
+                    $codeItem['name'] = 'Code';
+                    $codeItem['description'] = '';
+                    $codeItem['enabled'] = true;
+                    $codeItem['code'] = $code;
+                    require_once('AddActionsAndFilters_DataModel.php');
+                    $dataModel = new AddActionsAndFilters_DataModel($this, null);
+                    $dataModel->saveItem($codeItem);
+                    //$this->deleteOption('code'); // keep it as a backup for now
+                }
             }
         }
 
@@ -152,19 +162,26 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         add_action('wp_ajax_addactionsandfilters_save', array(&$this, 'ajaxSave'));
         add_action('wp_ajax_addactionsandfilters_export', array(&$this, 'ajaxExport'));
 
-        $isPluginAdminPage = (strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false);
-        $isPluginAjaxPage = strpos($_SERVER['REQUEST_URI'], 'addactionsandfilters_') !== false;
-        $isLoginPage = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
-
-        if ($isPluginAdminPage || $isPluginAjaxPage || $isLoginPage) {
+        if ($this->isPluginAdminPage() || $this->shouldSkipExecOnLoginPage()) {
             // Don't exec the code on these pages so that you can come back to the plugin dashboard page
             // and fix fatal errors.
-
-            //add_action('admin_enqueue_scripts', array(&$this, 'enqueueAdminPageStylesAndScripts'));
         } else {
             $this->registerSavedActionsFiltersAndShortcodes();
         }
+    }
 
+    public function isPluginAdminPage()
+    {
+        $isPluginAdminPage = strpos($_SERVER['REQUEST_URI'], $this->getAdminPageSlug()) !== false;
+        $isPluginAjaxPage = strpos($_SERVER['REQUEST_URI'], 'addactionsandfilters_') !== false;
+        return $isPluginAdminPage || $isPluginAjaxPage;
+    }
+
+    public function shouldSkipExecOnLoginPage()
+    {
+        $allowExecOnLoginPage = 'true' == $this->getOption('AllowExecOnLoginPage');
+        $isLoginPage = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
+        return !$allowExecOnLoginPage || !$isLoginPage;
     }
 
     function enqueueAdminPageStylesAndScripts()
@@ -174,7 +191,9 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     public function registerSavedActionsFiltersAndShortcodes() {
         require_once('AddActionsAndFilters_Executor.php');
         $exec = new AddActionsAndFilters_Executor($this);
-        $codeItems = $exec->getCodeItemsToExecute(is_admin());
+        $isLoginPage = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
+        $isAdminPage = is_admin();
+        $codeItems = $exec->getCodeItemsToExecute($isAdminPage || $isLoginPage);
         $exec->executeCodeItems($codeItems);
     }
 
