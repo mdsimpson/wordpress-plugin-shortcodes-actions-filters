@@ -44,26 +44,42 @@ Your code additions should not have to be artificially tied to your theme. This 
 
 = What happens when there is a syntax or other fatal error in one of my code items? =
 Typically you will see an error message on the page that is trying to execute the code.
-The error will contain a link to edit the problem code item.
+The error will contain a link to edit the problem code item. It will look like this:
+
+Shortcodes, Actions and Filters Plugin: Error in user-provided code item named "My Action". <u>Fix the code here</u>
+
+There are two cases where this plugin will not execute code.
+
+1. On this plugin's own dashboard pages for displaying and editing code. This is so that you can always get back to the
+page to edit code despite any error in your code.
+1. On login/logout page (which is the same page) except when the "Allow Execution of Actions and Filters on Login/Logout pages"
+option is set to "true".
 
 You will not see any errors on this plugin's dashboard pages for editing and listing the code. Therefore, you should
 open a different page on your site where you can see the results (or errors) of your code execution.
 
+By default, no code that you put in this plugin will run on login/logout pages.
+This is to prevent the situation where your code causes a fatal error
+that prevents you from being able to login to fix the problem. Consequently, any action or filters that you want run on
+login/logout pages will not be run. However you can override this setting on the plugin's Options page by setting
+"Allow Execution of Actions and Filters on Login/Logout pages" to "true". Do so at your own risk! Any code that you want
+executed on login/logout pages should have "Execute also on Dashboard Pages" checked.
+
 In certain cases, an error may cause you to be unable to access any pages your site, including dashboard pages.
-But you will be able to access this plugin's dashboard pages so that you can edit or delete the problem code.
+However, you will be able to access this plugin's dashboard pages so that you can edit or delete the problem code.
 Enter the URL to the plugin's dashboard page directly into your browser:
 
 http://YOUR-SITE/wp-admin/admin.php?page=ShortcodesActionsFilters
 
-Worst-case scenario: if the code interferes with being able to login and get to the dashboard, then you will
-need to go to the database.
+Only administrator users (manage_options role) can access that page and edit code.
 
-Find the wp_addactionsandfilters_plugin_usercode table. If you know the code item that is causing the problem, then set
+Worst-case scenario: if somehow your site is completely inaccessible, you can disable your code in via the database.
+This can happen if you enabled the setting to run code on the login page and that code creates a fatal error. To recover,
+find the wp_addactionsandfilters_plugin_usercode table. If you know the code item that is causing the problem, then set
 its "enabled" value to 0.
 
 Alternately, disable all code using the following query:
 <code>UPDATE wp_addactionsandfilters_plugin_usercode SET enabled = 0</code>
-
 
 = What order are the code elements executed in? =
 They are executed in order by ID number, lowest to highest. Shortcode are registered but not executed until the
@@ -72,6 +88,10 @@ shortcode appears on a page.
 Action and filter code can depend on code from a code item with a lower ID number. For example, if code item with
 ID=1 defines a function, then all code items with ID>1 have the function defined. But if you deactivate
 the code with ID=1, then active code items that depend on it will fail.
+
+= Why doesn't my action code execution on login/logout pages? =
+The plugin will not execute code on these pages because an error in your code could cause you to be unable to log into
+your site to fix the error. However, as stated above, you can override this setting (do so at your own risk!)
 
 == Screenshots ==
 
@@ -82,6 +102,12 @@ the code with ID=1, then active code items that depend on it will fail.
 5. Dashboard page for import/export to/from file and import from Shortcode Exec PHP
 
 == Changelog ==
+
+= 2.0.2 =
+
+* Introduced option to permit code execution on login/logout pages
+* Minor improvement to error messages
+* Fix for minor issue on edit page when using PHP 7.0.
 
 = 2.0.1 =
 
