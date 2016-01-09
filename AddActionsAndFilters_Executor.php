@@ -30,6 +30,11 @@ class AddActionsAndFilters_Executor
      */
     var $plugin;
 
+    /**
+     * @var array used as a temporary variable during code execution
+     */
+    var $codeItem;
+
     public function __construct($plugin)
     {
         $this->plugin = $plugin;
@@ -57,21 +62,43 @@ class AddActionsAndFilters_Executor
      */
     public function executeCodeItems($codeItems)
     {
-        foreach ($codeItems as $codeItem) {
-            if ($codeItem['shortcode']) {
-                $sc = new AddActionsAndFilters_ShortCode($this->plugin, $codeItem);
+        register_shutdown_function(array(&$this, 'fatalErrorHandler'));
+        foreach ($codeItems as $this->codeItem) {
+            if ($this->codeItem['shortcode']) {
+                $sc = new AddActionsAndFilters_ShortCode($this->plugin, $this->codeItem);
                 $sc->register_shortcode();
             } else {
-                $result = eval($codeItem['code']);
+                $result = TRUE;
+                try {
+                    $result = eval($this->codeItem['code']);
+                } catch (Exception $ex) {
+                    $result = FALSE;
+                }
                 if ($result === FALSE) {
-                    $url = $this->plugin->getAdminPageUrl() . "&id={$codeItem['id']}&action=edit";
-                    printf("<p>%s Plugin: Error in code item named <u><a href='%s' target='_blank'>%s</a></u></p>",
-                        $this->plugin->getPluginDisplayName(),
-                        $url,
-                        $codeItem['name']);
+                    $this->printErrorMessage($this->codeItem);
                 }
             }
         }
+        $this->codeItem = null;
+    }
+
+    public function fatalErrorHandler() {
+        if ($this->codeItem) {
+            $this->printErrorMessage($this->codeItem);
+        }
+    }
+
+    /**
+     * @param $codeItem array
+     */
+    public function printErrorMessage($codeItem) {
+        $url = $this->plugin->getAdminPageUrl() . "&id={$codeItem['id']}&action=edit";
+        $name = $codeItem['name'] ? $codeItem['name'] : '(unamed)';
+        printf("<p>%s Plugin: Error in user-provided code item named \"%s\". <u><a href='%s' target='_blank'>%s</a></u></p>",
+            $this->plugin->getPluginDisplayName(),
+            $name,
+            $url,
+            __('Fix the code here', 'add-actions-and-filters'));
     }
 
 }
