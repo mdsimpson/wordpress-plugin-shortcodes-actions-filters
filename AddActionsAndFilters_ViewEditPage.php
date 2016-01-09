@@ -214,14 +214,13 @@ class AddActionsAndFilters_ViewEditPage
                             "capability": jQuery('#capability').val(),
                             "code": editor.getValue()
                         };
-                        //console.log(item); // debug
                         jQuery.ajax(
                             {
                                 "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
                                 "type": "POST",
                                 "data": item,
                                 "success": function (data, textStatus) {
-                                    window.location.replace('<?php echo $this->plugin->getAdminPageUrl() ?>&id=' + data + '&action=edit');
+                                    window.location.replace('<?php echo $this->plugin->getAdminPageUrl() ?>&id=<?php echo $item['id'] ?>&action=edit');
                                 },
                                 "error": function (textStatus, errorThrown) {
                                     jQuery("#codesavestatus").html(textStatus.statusText);
