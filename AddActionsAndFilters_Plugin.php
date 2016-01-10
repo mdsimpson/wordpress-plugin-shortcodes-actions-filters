@@ -181,7 +181,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
         $allowExecOnLoginPage = 'true' == $this->getOption('AllowExecOnLoginPage');
         $isLoginPage = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
-        return !$allowExecOnLoginPage || !$isLoginPage;
+        return !$allowExecOnLoginPage && $isLoginPage;
     }
 
     function enqueueAdminPageStylesAndScripts()
