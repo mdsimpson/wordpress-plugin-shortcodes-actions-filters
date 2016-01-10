@@ -147,6 +147,12 @@ class AddActionsAndFilters_AdminPageController
     public function ajaxSave()
     {
         if (current_user_can('manage_options')) {
+            if (ob_get_length()) {
+                // eliminate any debug output from polluting the ajax return value
+                // https://codex.wordpress.org/AJAX_in_Plugins
+                ob_clean();
+            }
+
             if (!headers_sent()) {
                 // Don't let IE cache this request
                 header('Pragma: no-cache');
