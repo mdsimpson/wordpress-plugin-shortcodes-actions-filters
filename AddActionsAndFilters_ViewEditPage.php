@@ -168,7 +168,7 @@ class AddActionsAndFilters_ViewEditPage
                         <div id="sc_info_buffer" style="display: none;">
                             <input type="checkbox" id="buffer" name="buffer"
                                    value="true" <?php if (!isset($item['buffer']) || (isset($item['buffer']) && $item['buffer'])) echo 'checked' ?>>
-                            <label for="buffer"><?php _e('Code echos output') ?></label>
+                            <label for="buffer"><?php _e('Code echoes output') ?></label>
                         </div>
                     </td>
                 </tr>
