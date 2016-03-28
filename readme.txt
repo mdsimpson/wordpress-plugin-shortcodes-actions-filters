@@ -103,6 +103,9 @@ your site to fix the error. However, as stated above, you can override this sett
 
 == Changelog ==
 
+= 2.0.4 =
+* Improved error handling/reporting for PHP 7+
+
 = 2.0.3 =
 
 * Introduced option to permit code execution on login/logout pages
