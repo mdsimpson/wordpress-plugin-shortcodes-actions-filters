@@ -5,11 +5,7 @@ msgstr ""
 "Project-Id-Version: Add Shortcodes Actions And Filters 2.0.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/add-actions-and-"
 "filters\n"
-<<<<<<< 4149e0e8bc7ea584cc0780d7804c56af28ff5786
 "POT-Creation-Date: 2016-03-28 03:57:18+00:00\n"
-=======
-"POT-Creation-Date: 2016-03-28 03:39:31+00:00\n"
->>>>>>> Updated POT file
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
