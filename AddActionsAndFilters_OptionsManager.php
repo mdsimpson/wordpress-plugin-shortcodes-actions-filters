@@ -115,14 +115,19 @@ class AddActionsAndFilters_OptionsManager {
      * to enforce "scoping" the options in the WP options table thereby avoiding name conflicts
      * @param $optionName string defined in settings.php and set as keys of $this->optionMetaData
      * @param $default string default value to return if the option is not set
+     * @param $saveDefault boolean indicates whether to save the default value if no value was found.
+     * this helps prevents calls to the DB b/c the option does not exist and so cannot be cached by WP
      * @return string the value from delegated call to get_option(), or optional default value
      * if option is not set.
      */
-    public function getOption($optionName, $default = null) {
+    public function getOption($optionName, $default = null, $saveDefault = false) {
         $prefixedOptionName = $this->prefix($optionName); // how it is stored in DB
         $retVal = get_option($prefixedOptionName);
         if (!$retVal && $default) {
             $retVal = $default;
+            if ($saveDefault) {
+                add_option($prefixedOptionName, $default);
+            }
         }
         return $retVal;
     }

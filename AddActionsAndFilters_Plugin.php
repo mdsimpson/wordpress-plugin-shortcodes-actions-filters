@@ -102,7 +102,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
      */
     protected function unInstallDatabaseTables()
     {
-        if ('true' == $this->getOption('DropOnUninstall', 'false')) {
+        if ('true' == $this->getOption('DropOnUninstall', 'false', true)) {
             global $wpdb;
             $table_name = $this->getTableName();
             $wpdb->query("DROP TABLE IF EXISTS $table_name");
@@ -122,9 +122,9 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         if ($this->isVersionLessThan($savedVersion, '2.0.2')) {
             
             // Make these options cached by WP
-            $value = $this->getOption('AllowExecOnLoginPage', 'false');
+            $value = $this->getOption('AllowExecOnLoginPage', 'false', true);
             $this->addOption('AllowExecOnLoginPage', $value);
-            $value = $this->getOption('DropOnUninstall', 'false');
+            $value = $this->getOption('DropOnUninstall', 'false', true);
             $this->addOption('DropOnUninstall', $value);
             
             if ($this->isVersionLessThan($savedVersion, '2.0')) {
