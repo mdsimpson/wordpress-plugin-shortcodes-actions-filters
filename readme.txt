@@ -146,3 +146,4 @@ your site to fix the error. However, as stated above, you can override this sett
 
 Significant upgrade: now can create shortcodes and import shortcodes from Shortcode Exec PHP.
 Can manage different pieces of code, having them individually activated or not.
+
