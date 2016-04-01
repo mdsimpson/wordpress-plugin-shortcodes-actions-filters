@@ -1,4 +1,4 @@
-# Copyright (C) 2016 Add Shortcodes Actions And Filters
+# Copyright (C) 2016 Add Shortcodes Actions And Filters 
 # This file is distributed under the same license as the Add Shortcodes Actions And Filters package.
 msgid ""
 msgstr ""
