@@ -103,6 +103,9 @@ your site to fix the error. However, as stated above, you can override this sett
 
 == Changelog ==
 
+= 2.0.6 =
+* Bug Fix: Import file operation was stripping out backslashes out of code
+
 = 2.0.5 =
 * Minor performance improvement to options handling
 

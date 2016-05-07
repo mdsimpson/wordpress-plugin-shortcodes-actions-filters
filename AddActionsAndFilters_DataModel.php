@@ -251,9 +251,13 @@ class AddActionsAndFilters_DataModel
             'inadmin'
         );
 
-        foreach ($strings as $key) {
-            $item[$key] = stripslashes($item[$key]);
+        $doStripSlashes = isset($item['stripslashes']) ? $item['stripslashes'] : true;
+        if ($doStripSlashes) {
+            foreach ($strings as $key) {
+                $item[$key] = stripslashes($item[$key]);
+            }
         }
+
         foreach ($bools as $key) {
             $item[$key] = $this->convertBooleanValue($item[$key]);
         }

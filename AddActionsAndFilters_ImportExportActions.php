@@ -106,6 +106,7 @@ class AddActionsAndFilters_ImportExportActions
                 $url_base = $this->plugin->getAdminPageUrl(); // . ;
 
                 foreach ($json_array as $item) {
+                    $item['stripslashes'] = false; // flag to not strip slashes before save
                     // Don't overwrite existing code items; insert new ones
                     $id = $dataModel->insertItem($item);
                     printf('<br/><a target="_blank" href="%s">%s</a>',
