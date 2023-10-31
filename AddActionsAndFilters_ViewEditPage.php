@@ -20,20 +20,17 @@
     If not, see <http://www.gnu.org/licenses/>.
 */
 
-class AddActionsAndFilters_ViewEditPage
-{
+class AddActionsAndFilters_ViewEditPage {
     /**
      * @var AddActionsAndFilters_Plugin
      */
     var $plugin;
 
-    public function __construct(&$plugin)
-    {
+    public function __construct(&$plugin) {
         $this->plugin = $plugin;
     }
 
-    public function display($item)
-    {
+    public function display($item) {
         $this->outputCodeMirrorScriptsAndCss();
         $this->outputHeader();
         $this->outputCodeEditor($item);
@@ -43,18 +40,17 @@ class AddActionsAndFilters_ViewEditPage
     /**
      * Add CodeMirror scripts for the code editor
      */
-    public function outputCodeMirrorScriptsAndCss()
-    {
+    public function outputCodeMirrorScriptsAndCss() {
         $libs = array(
-            'lib/codemirror.js',
-            'lib/codemirror.css',
-            'addon/edit/matchbrackets.js',
-            'mode/htmlmixed/htmlmixed.js',
-            'mode/xml/xml.js',
-            'mode/javascript/javascript.js',
-            'mode/css/css.js',
-            'mode/clike/clike.js',
-            'mode/php/php.js',
+                'lib/codemirror.js',
+                'lib/codemirror.css',
+                'addon/edit/matchbrackets.js',
+                'mode/htmlmixed/htmlmixed.js',
+                'mode/xml/xml.js',
+                'mode/javascript/javascript.js',
+                'mode/css/css.js',
+                'mode/clike/clike.js',
+                'mode/php/php.js',
         );
         $baseUrl = $this->plugin->getPluginFileUrl('codemirror-5.9');
         foreach ($libs as $lib) {
@@ -73,10 +69,18 @@ class AddActionsAndFilters_ViewEditPage
     /**
      * Add top header table
      */
-    public function outputHeader()
-    {
+    public function outputHeader() {
         ?>
-        <div class="wrap">
+        <style type="text/css">
+            .asaf_ltr {
+                direction: ltr;
+            }
+
+            .asaf_hide {
+                display: none;
+            }
+        </style>
+        <div id="asaf_header" class="wrap asaf_ltr">
             <table width="100%">
                 <tbody>
                 <tr>
@@ -98,10 +102,9 @@ class AddActionsAndFilters_ViewEditPage
      * Output the main contents of the page including the code editor and metadata fields
      * @param $item array created by AddActionsAndFilters_DataModel
      */
-    public function outputCodeEditor($item)
-    {
+    public function outputCodeEditor($item) {
         ?>
-        <div class="wrap">
+        <div id="asaf_editor" class="wrap asaf_ltr">
 
             <table width="100%">
                 <tbody>
@@ -110,23 +113,24 @@ class AddActionsAndFilters_ViewEditPage
                         <label for="name"><?php _e('Name') ?></label>
                     </td>
                     <td valign="top" nowrap>
-                        <span id="sc_info_open" style="display: none;">[</span>
-                        <input id="name" type="text" value="<?php echo isset($item['name']) ?  $item['name'] : '' ?>" size="25"/>
-                        <span id="sc_info_close" style="display: none;">]</span>
+                        <span id="sc_info_open" class="asaf_hide">[</span>
+                        <input id="name" type="text" value="<?php echo isset($item['name']) ? $item['name'] : '' ?>"
+                               size="25"/>
+                        <span id="sc_info_close" class="asaf_hide">]</span>
                     </td>
                     <td valign="top">
                         <label for="description"><?php _e('Description') ?></label>
                     </td>
                     <td valign="top">
                         <textarea title="description" id="description"
-                                  cols="80"><?php echo isset($item['description']) ?  $item['description'] : '' ?></textarea>
+                                  cols="80"><?php echo isset($item['description']) ? $item['description'] : '' ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td valign="top" colspan="2">
                         <input type="checkbox" id="activated" name="activated"
                                value="true" <?php if (isset($item['enabled']) && $item['enabled']) echo 'checked' ?>>
-                        <label for="enabled"><?php _e('Activated') ?></label>
+                        <label for="activated"><?php _e('Activated') ?></label>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="checkbox" id="shortcode" name="shortcode"
                                value="true" <?php if (isset($item['shortcode']) && $item['shortcode']) echo 'checked' ?>>
@@ -160,12 +164,12 @@ class AddActionsAndFilters_ViewEditPage
                     <td colspan="3">
                     </td>
                     <td>
-                        <div id="af_info_inadmin" style="display: none;">
+                        <div id="af_info_inadmin" class="asaf_hide">
                             <input type="checkbox" id="inadmin" name="inadmin"
                                    value="true" <?php if (isset($item['inadmin']) && $item['inadmin']) echo 'checked' ?>>
                             <label for="inadmin"><?php _e('Execute also on Dashboard Pages', 'add-actions-and-filters') ?></label>
                         </div>
-                        <div id="sc_info_buffer" style="display: none;">
+                        <div id="sc_info_buffer" class="asaf_hide">
                             <input type="checkbox" id="buffer" name="buffer"
                                    value="true" <?php if (!isset($item['buffer']) || (isset($item['buffer']) && $item['buffer'])) echo 'checked' ?>>
                             <label for="buffer"><?php _e('Code echoes output') ?></label>
@@ -176,11 +180,12 @@ class AddActionsAndFilters_ViewEditPage
             </table>
 
 
-            <div id="sc_info_instructions_open" style="display: none;">
+            <div id="sc_info_instructions_open" class="asaf_hide">
                 <code>function handle_shortcode ( $atts, $content = null ) {</code><br/>
             </div>
-            <textarea title="code" id="code"><?php echo isset($item['code']) ? $item['code'] : '' ?></textarea>
-            <div id="sc_info_instructions_close" style="display: none;">
+            <textarea title="code"
+                      id="code"><?php echo isset($item['code']) ? htmlentities($item['code']) : '' ?></textarea>
+            <div id="sc_info_instructions_close" class="asaf_hide">
                 <code>}</code>
             </div>
 
@@ -215,28 +220,28 @@ class AddActionsAndFilters_ViewEditPage
                             "code": editor.getValue()
                         };
                         jQuery.ajax(
-                            {
-                                "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
-                                "type": "POST",
-                                "data": item,
-                                "success": function (data, textStatus) {
-                                    window.location.replace('<?php echo $this->plugin->getAdminPageUrl() ?>&id=' + data + '&action=edit');
-                                },
-                                "error": function (textStatus, errorThrown) {
-                                    jQuery("#codesavestatus").html(textStatus.statusText);
-                                    console.log(textStatus);
-                                    console.log(errorThrown);
-                                },
-                                "beforeSend": function () {
-                                    jQuery("#codesavestatus").html('<img src="<?php echo plugins_url('img/load.gif', __FILE__); ?>">');
+                                {
+                                    "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
+                                    "type": "POST",
+                                    "data": item,
+                                    "success": function (data, textStatus) {
+                                        window.location.replace('<?php echo $this->plugin->getAdminPageUrl() ?>&id=' + data + '&action=edit');
+                                    },
+                                    "error": function (textStatus, errorThrown) {
+                                        jQuery("#codesavestatus").html(textStatus.statusText);
+                                        console.log(textStatus);
+                                        console.log(errorThrown);
+                                    },
+                                    "beforeSend": function () {
+                                        jQuery("#codesavestatus").html('<img src="<?php echo plugins_url('img/load.gif', __FILE__); ?>">');
+                                    }
                                 }
-                            }
                         );
                     })
                 });
             </script>
 
-            <div id="sc_info_shortcode_instructions" style="display: none;">
+            <div id="sc_info_shortcode_instructions" class="asaf_hide">
                 <table width="350px">
                     <tbody>
                     <tr>
@@ -251,7 +256,7 @@ class AddActionsAndFilters_ViewEditPage
                 </table>
             </div>
         </div>
-        <div id="af_info_instructions" style="display: none;">
+        <div id="af_info_instructions" class="asaf_ltr asaf_hide">
 
             <?php
             $action_example = 'function email_friends( $post_ID ) {
@@ -319,8 +324,7 @@ add_filter( \'the_title\', \'prefix_title\', 10, 2 );';
     /**
      * @return array of capability => array[roles that have it]
      */
-    public function getCapabilityToRolesList()
-    {
+    public function getCapabilityToRolesList() {
         global $wp_roles;
         $capToRoles = array();
         foreach (array_reverse(array_keys($wp_roles->roles)) as $role) {

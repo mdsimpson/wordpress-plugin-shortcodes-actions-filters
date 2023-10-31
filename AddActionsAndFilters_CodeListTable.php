@@ -138,6 +138,7 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         $urlBuilder = new AddActionsAndFilters_AdminViewUrlBuilder();
 
         $urlBuilder->setParameter('id', $item['id']);
+        $urlBuilder->setParameter('_wpnonce', wp_create_nonce($this->getActionNonceName()));
 
         $rowActions = array();
         $tag = '<a href="%s">%s</a>';
@@ -228,8 +229,24 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
      * @return false|int from wp_verify_nonce
      * @see https://gist.github.com/petenelson/8981536
      */
-    public function verifyBulkNonce($nonce) {
+    public function verifyBulkNonce($nonce)
+    {
         return wp_verify_nonce($nonce, 'bulk-' . $this->_args['plural']);
+    }
+
+    public function getActionNonceName(): string
+    {
+        return "AddActionsAndFilters";
+    }
+
+    public function verifyActionNonce($nonce)
+    {
+        return wp_verify_nonce($nonce, $this->getActionNonceName());
+    }
+
+    public function verifyAdminPageNonce($nonce): bool
+    {
+        return $this->verifyActionNonce($nonce) || $this->verifyBulkNonce($nonce);
     }
 
 }

@@ -82,17 +82,7 @@ class AddActionsAndFilters_AdminPageController
         if ($action && $action != -1) {
             require_once('AddActionsAndFilters_AdminPageActions.php');
             $actions = new AddActionsAndFilters_AdminPageActions();
-            $ids = null;
-            if (isset($_REQUEST['cb']) && is_array($_REQUEST['cb'])) {
-                // check nonce which is on the bulk action form only
-                if ($table->verifyBulkNonce($_REQUEST['_wpnonce'])) {
-                    $ids = $_REQUEST['cb'];
-                }
-            } else if (isset($_REQUEST['id'])) {
-                $ids = array($_REQUEST['id']);
-            } else if (isset($_REQUEST['ids'])) {
-                $ids = explode(',', $_REQUEST['ids']);
-            }
+            $ids = $this->getIds();
 
             // Perform Actions
             if ($action == $actions->getEditKey()) {
@@ -102,25 +92,9 @@ class AddActionsAndFilters_AdminPageController
                 $showAdminPage = false; // show edit page instead
                 $this->plugin->displayEditPage($item);
             } else if ($ids) {
-                switch ($action) {
-                    case $actions->getActivateKey():
-                        $dataModel->activate($ids, true);
-                        break;
-                    case $actions->getDeactivateKey():
-                        $dataModel->activate($ids, false);
-                        break;
-                    case $actions->getDeleteKey();
-                        $dataModel->delete($ids);
-                        break;
-                    case $actions->getExportKey();
-                        if (!empty($ids)) {
-                            require_once('AddActionsAndFilters_ViewImportExport.php');
-                            $view = new AddActionsAndFilters_ViewImportExport($this->plugin);
-                            $view->outputBulkExport($ids);
-                        }
-                        break;
-                    default:
-                        break;
+                $nonce_ok =$table->verifyAdminPageNonce($_REQUEST['_wpnonce']);
+                if ($nonce_ok) {
+                    $this->doMutationAction($action, $actions, $dataModel, $ids);
                 }
             }
         }
@@ -170,6 +144,57 @@ class AddActionsAndFilters_AdminPageController
             die();
         } else {
             die(-1);
+        }
+    }
+
+    /**
+     * @return array|false|string[]|null
+     */
+    public function getIds()
+    {
+        $ids = null;
+        if (isset($_REQUEST['cb']) && is_array($_REQUEST['cb'])) {
+            $ids = $_REQUEST['cb']; // for bulk action
+        }
+        if (isset($_REQUEST['id'])) {
+            $ids = array($_REQUEST['id']);
+        } else if (isset($_REQUEST['ids'])) {
+            $ids = explode(',', $_REQUEST['ids']);
+        }
+        return $ids;
+    }
+
+    /**
+     * @param $action
+     * @param AddActionsAndFilters_AdminPageActions $actions
+     * @param AddActionsAndFilters_DataModel $dataModel
+     * @param array $ids
+     * @return void
+     */
+    public function doMutationAction($action,
+                                     AddActionsAndFilters_AdminPageActions $actions,
+                                     AddActionsAndFilters_DataModel
+                                     $dataModel, array $ids)
+    {
+        switch ($action) {
+            case $actions->getActivateKey():
+                $dataModel->activate($ids, true);
+                break;
+            case $actions->getDeactivateKey():
+                $dataModel->activate($ids, false);
+                break;
+            case $actions->getDeleteKey();
+                $dataModel->delete($ids);
+                break;
+            case $actions->getExportKey();
+                if (!empty($ids)) {
+                    require_once('AddActionsAndFilters_ViewImportExport.php');
+                    $view = new AddActionsAndFilters_ViewImportExport($this->plugin);
+                    $view->outputBulkExport($ids);
+                }
+                break;
+            default:
+                break;
         }
     }
 

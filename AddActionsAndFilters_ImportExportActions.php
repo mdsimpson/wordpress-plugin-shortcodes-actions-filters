@@ -134,6 +134,7 @@ class AddActionsAndFilters_ImportExportActions
                 //$buffer = get_option("scep_buffer_$key");
                 //$param = get_option("scep_param_$key");
 
+                $shortCode['stripslashes'] = false;
                 $id = $dataModel->saveItem($shortCode);
                 $url = $this->plugin->getAdminPageUrl() . "&id=$id&action=edit";
                 echo __('Imported', 'add-actions-and-filters') . " <a target='_blank' href='$url'>$key</a></br>";

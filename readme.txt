@@ -5,8 +5,8 @@ Tags: add shortcodes actions and filters,add shortcodes,add action,add filter,sh
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Requires at least: 4.4
-Tested up to: 4.5
-Stable tag: 2.0.5
+Tested up to: 6.3.2
+Stable tag: 2.10
 
 Add PHP Code to create your own Shortcodes, Actions and Filters
 
@@ -78,6 +78,10 @@ This can happen if you enabled the setting to run code on the login page and tha
 find the wp_addactionsandfilters_plugin_usercode table. If you know the code item that is causing the problem, then set
 its "enabled" value to 0.
 
+Alternately, disable the problem code using the following query if you know the code's ID number.
+If the ID is 5, then you would execute:
+<code>UPDATE wp_addactionsandfilters_plugin_usercode SET enabled = 0 WHERE id = 5</code>
+
 Alternately, disable all code using the following query:
 <code>UPDATE wp_addactionsandfilters_plugin_usercode SET enabled = 0</code>
 
@@ -89,9 +93,12 @@ Action and filter code can depend on code from a code item with a lower ID numbe
 ID=1 defines a function, then all code items with ID>1 have the function defined. But if you deactivate
 the code with ID=1, then active code items that depend on it will fail.
 
-= Why doesn't my action code execution on login/logout pages? =
+= Why doesn't my action code execute on login/logout pages? =
 The plugin will not execute code on these pages because an error in your code could cause you to be unable to log into
 your site to fix the error. However, as stated above, you can override this setting (do so at your own risk!)
+
+= When I save the code, I get a 403 Forbidden error =
+You are probably using WordFence plugin and you must <a href="http://cfdbplugin.com/?p=1478">add this plugin to the whitelist</a>.
 
 == Screenshots ==
 
@@ -102,6 +109,18 @@ your site to fix the error. However, as stated above, you can override this sett
 5. Dashboard page for import/export to/from file and import from Shortcode Exec PHP
 
 == Changelog ==
+
+= 2.10 =
+* Security fix.
+
+= 2.0.9 =
+* Bug Fix: Was incorrectly stripping slashes from Short Code Exec PHP code on import.
+
+= 2.0.8 =
+* Bug Fix: Code Editor now usable on RTL language sites. Forced code section to be LTR.
+
+= 2.0.7 =
+* Bug Fix: Displaying code editor that had textarea tag in the code element it failed to display properly
 
 = 2.0.6 =
 * Bug Fix: Import file operation was stripping out backslashes out of code
