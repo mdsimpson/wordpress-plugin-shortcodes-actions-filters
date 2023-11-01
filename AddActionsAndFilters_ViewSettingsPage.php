@@ -125,6 +125,7 @@ class AddActionsAndFilters_ViewSettingsPage
                 _e('Settings', 'add-actions-and-filters'); ?></h2>
 
             <form method="post" action="">
+                <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce()?>"/>
                 <?php settings_fields($settingsGroup); ?>
                 <table class="asaf-options-table">
                     <tbody>

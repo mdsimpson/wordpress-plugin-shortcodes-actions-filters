@@ -64,6 +64,7 @@ class AddActionsAndFilters_ViewImportExport
 
     public function outputExport()
     {
+        $nonce = wp_create_nonce();
         echo '<h3>';
         _e('Export All Code to a File', 'add-actions-and-filters');
         echo '</h3>';
@@ -78,7 +79,7 @@ class AddActionsAndFilters_ViewImportExport
         <script>
             jQuery(document).ready(function () {
                 jQuery('#exportcode').click(function () {
-                    window.location = "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_export";
+                    window.location = "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_export&_wpnonce=<?php echo $nonce?>";
                 });
             });
         </script>
@@ -87,10 +88,11 @@ class AddActionsAndFilters_ViewImportExport
 
     public function outputBulkExport($ids)
     {
+        $nonce = wp_create_nonce();
         ?>
         <script>
             jQuery(document).ready(function () {
-                window.location = "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_export&ids=<?php
+                window.location = "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_export&_wpnonce=<?php echo $nonce?>&ids=<?php
                     echo implode(',', $ids);
                     ?>";
             });
@@ -110,6 +112,7 @@ class AddActionsAndFilters_ViewImportExport
         ?>
         <form action="" method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="importfile"/>
+            <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce()?>"/>
             <input type="file" name="importfile" id="importfile"/>
             <?php submit_button(__('Import', 'add-actions-and-filters')); ?>
         </form>
@@ -132,6 +135,7 @@ class AddActionsAndFilters_ViewImportExport
         <p><?php _e('The following shortcodes are found in "Shortcode Exec PHP" plugin:', 'add-actions-and-filters'); ?></p>
         <form action="" method="post">
             <input type="hidden" name="action" value="import_scep"/>
+            <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce()?>"/>
             <?php
             foreach ($scep_names as $name) {
                 ?>

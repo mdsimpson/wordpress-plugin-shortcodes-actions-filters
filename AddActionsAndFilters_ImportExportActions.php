@@ -40,7 +40,7 @@ class AddActionsAndFilters_ImportExportActions
     {
         $view = new AddActionsAndFilters_ViewImportExport($this->plugin);
 
-        if (isset($_REQUEST['action'])) {
+        if (isset($_REQUEST['action']) && wp_verify_nonce($_REQUEST['_wpnonce'])) {
             switch ($_REQUEST['action']) {
 
                 case 'import_scep':
@@ -64,7 +64,7 @@ class AddActionsAndFilters_ImportExportActions
 
     public function ajaxExport()
     {
-        if (current_user_can('manage_options')) {
+        if (current_user_can('manage_options') && wp_verify_nonce($_REQUEST['_wpnonce'])) {
             if (!headers_sent()) {
                 // Don't let IE cache this request
                 header('Pragma: no-cache');

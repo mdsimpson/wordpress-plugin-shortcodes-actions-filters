@@ -221,7 +221,7 @@ class AddActionsAndFilters_ViewEditPage {
                         };
                         jQuery.ajax(
                                 {
-                                    "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save",
+                                    "url": "<?php echo admin_url('admin-ajax.php') ?>?action=addactionsandfilters_save&_wpnonce=<?php echo wp_create_nonce() ?>",
                                     "type": "POST",
                                     "data": item,
                                     "success": function (data, textStatus) {

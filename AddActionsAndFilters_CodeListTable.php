@@ -138,20 +138,22 @@ class AddActionsAndFilters_CodeListTable extends WP_List_Table
         $urlBuilder = new AddActionsAndFilters_AdminViewUrlBuilder();
 
         $urlBuilder->setParameter('id', $item['id']);
-        $urlBuilder->setParameter('_wpnonce', wp_create_nonce($this->getActionNonceName()));
 
         $rowActions = array();
         $tag = '<a href="%s">%s</a>';
+
+        // Edit Action
+        $action = $this->actions->getEditStrings();
+        $urlBuilder->setParameter('action', $action->getKey());
+        $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
+
+        // Add a nonce for mutation actions
+        $urlBuilder->setParameter('_wpnonce', wp_create_nonce($this->getActionNonceName()));
 
         // Activate/Deactivate Action
         $action = $item['enabled'] ?
             $action = $this->actions->getDeactivateStrings() :
             $action = $this->actions->getActivateStrings();
-        $urlBuilder->setParameter('action', $action->getKey());
-        $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
-
-        // Edit Action
-        $action = $this->actions->getEditStrings();
         $urlBuilder->setParameter('action', $action->getKey());
         $rowActions[$action->getKey()] = sprintf($tag, $urlBuilder->buildUrl(), $action->getDisplay());
 

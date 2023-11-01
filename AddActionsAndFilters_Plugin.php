@@ -67,7 +67,8 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         $this->ensureDatabaseTableInstalled();
     }
 
-    public function ensureDatabaseTableInstalled() {
+    public function ensureDatabaseTableInstalled()
+    {
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
@@ -120,13 +121,13 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         $upgradeOk = true;
         $savedVersion = $this->getVersionSaved();
         if ($this->isVersionLessThan($savedVersion, '2.0.2')) {
-            
+
             // Make these options cached by WP
             $value = $this->getOption('AllowExecOnLoginPage', 'false', true);
             $this->addOption('AllowExecOnLoginPage', $value);
             $value = $this->getOption('DropOnUninstall', 'false', true);
             $this->addOption('DropOnUninstall', $value);
-            
+
             if ($this->isVersionLessThan($savedVersion, '2.0')) {
                 $this->installDatabaseTables();
                 $code = $this->getOption('code');
@@ -188,7 +189,8 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     {
     }
 
-    public function registerSavedActionsFiltersAndShortcodes() {
+    public function registerSavedActionsFiltersAndShortcodes()
+    {
         require_once('AddActionsAndFilters_Executor.php');
         $exec = new AddActionsAndFilters_Executor($this);
         $isLoginPage = in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
@@ -287,6 +289,12 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
         }
     }
 
+    public function nonceCheck() {
+        if (!wp_verify_nonce($_REQUEST['_wpnonce'])) {
+            die (-1);
+        }
+    }
+
     public function settingsPage()
     {
         $this->securityCheck();
@@ -318,6 +326,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     public function ajaxSave()
     {
         $this->securityCheck();
+        $this->nonceCheck();
         require_once('AddActionsAndFilters_AdminPageController.php');
         $controller = new AddActionsAndFilters_AdminPageController($this);
         $controller->ajaxSave();
@@ -329,6 +338,7 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     public function ajaxExport()
     {
         $this->securityCheck();
+        $this->nonceCheck();
         require_once('AddActionsAndFilters_ImportExportActions.php');
         $impex = new AddActionsAndFilters_ImportExportActions($this);
         $impex->ajaxExport();
@@ -337,11 +347,13 @@ class AddActionsAndFilters_Plugin extends AddActionsAndFilters_LifeCycle
     /**
      * @return string
      */
-    public function getAdminPageUrl() {
+    public function getAdminPageUrl()
+    {
         return get_admin_url() . 'admin.php?page=' . $this->getAdminPageSlug();
     }
 
-    function handleAdminPageUrl() {
+    function handleAdminPageUrl()
+    {
         require_once('AddActionsAndFilters_AdminPageController.php');
         $controller = new AddActionsAndFilters_AdminPageController($this);
         $controller->handleAdminPageUrl();
