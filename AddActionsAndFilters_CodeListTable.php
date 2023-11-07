@@ -1,7 +1,7 @@
 <?php
 
 /*
-    "WordPress Plugin Template" Copyright (C) 2013-2016 Michael Simpson  (email : michael.d.simpson@gmail.com)
+    "Add Shortcodes, Actions and Filters" Copyright (C) 2013-2023 Michael Simpson  (email : michael.d.simpson@gmail.com)
 
     This file is part of WordPress Plugin Template for WordPress.
 
